@@ -4,24 +4,21 @@ namespace AAUS2_SemPraca.Objects
 {
     public abstract class GeoEntity
     {
-        public int ID { get; set; }
-        public int Number { get; set; }
-        public string Description { get; set; }
+        private GPSLocation point2;
+
+        protected int ID { get; }
+        public required int Number { get; set; }
+        public string? Description { get; set; }
         public List<GeoEntity> SubAreas { get; set; } = new();
-        public GPSLocation Point1 { get; set; }
-        public GPSLocation Point2 { get; set; }
-        protected double[] LowerLeft { get; set; }
-        protected double[] UpperRight { get; set; }
+        public required GPSLocation Point1 { get; set; }
+        public required GPSLocation Point2 { get; set; }
+        protected double[] LowerLeft { get; }
+        protected double[] UpperRight { get; }
 
-        public GeoEntity(int number, string description, GPSLocation point1, GPSLocation point2)
+        public GeoEntity()
         {
-            Number = number;
-            Description = description;
-            Point1 = point1;
-            Point2 = point2;
-
-            var value1 = point1.GPSToDouble();
-            var value2 = point2.GPSToDouble();
+            var value1 = Point1.GPSToDouble();
+            var value2 = Point2.GPSToDouble();
 
             if (Math.Min(value1[1], value2[1]) == value1[1])
             {
@@ -33,6 +30,11 @@ namespace AAUS2_SemPraca.Objects
                 LowerLeft = value2;
                 UpperRight = value1;
             }
+        }
+
+        public void AddSubAreas(List<GeoEntity> entities)
+        {
+            entities.ForEach(x => SubAreas.Add(x));
         }
     }
 }

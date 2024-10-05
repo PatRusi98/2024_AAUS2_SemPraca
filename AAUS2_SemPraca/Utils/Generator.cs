@@ -5,8 +5,8 @@ namespace AAUS2_SemPraca.Utils
 {
     public class Generator
     {
-        private static Generator _instance = null;
-        private Random _random = new();
+        private static Generator? _instance = null;
+        private readonly Random _random = new();
 
         private Generator() { }
 
@@ -67,7 +67,35 @@ namespace AAUS2_SemPraca.Utils
         #region private
         private GPSLocation[] GenerateGPSLocations()
         {
-            return [new GPSLocation(), new GPSLocation()];
+            // generovanie nahodnych GPS lokalit, maximalne do 89 sirky a 179 dlzky aby sa neprelievali
+            var lat1 = Math.Round(_random.NextDouble() * 89, 4);
+            var longt1 = Math.Round(_random.NextDouble() * 179, 4);
+            Coordinate latCoord = _random.Next(2) == 0 ? Coordinate.North : Coordinate.South;
+            Coordinate longCoord = _random.Next(2) == 0 ? Coordinate.East : Coordinate.West;
+
+            // logika, aby negenerovalo zbytocne velke objekty +- max 1.0 sirky a dlzky
+            var lat2 = Math.Round(_random.NextDouble(), 4) + lat1;
+            var longt2 = Math.Round(_random.NextDouble(), 4) + longt1;
+
+            GPSLocation[] result =
+            [
+                new GPSLocation()
+                {
+                    Latitude = lat1,
+                    LatCoord = latCoord,
+                    Longitude = longt1,
+                    LongCoord = longCoord
+                },
+                new GPSLocation()
+                {
+                    Latitude = lat2,
+                    LatCoord = latCoord,
+                    Longitude = longt2,
+                    LongCoord = longCoord
+                }
+            ];
+
+            return result;
         }
         #endregion
     }

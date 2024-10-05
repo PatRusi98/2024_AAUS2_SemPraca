@@ -1,4 +1,5 @@
-﻿using static AAUS2_SemPraca.Utils.Enums;
+﻿using AAUS2_SemPraca.Utils;
+using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Objects
 {
