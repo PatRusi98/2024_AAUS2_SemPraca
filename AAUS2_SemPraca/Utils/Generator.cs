@@ -42,23 +42,11 @@ namespace AAUS2_SemPraca.Utils
 
             if (property)
             {
-                result = new Property()
-                {
-                    Number = number,
-                    Description = description,
-                    Point1 = gpss[0],
-                    Point2 = gpss[1]
-                };
+                result = new Property(number, description, gpss[0], gpss[1]);
             }
             else
             {
-                result = new Parcel()
-                {
-                    Number = number,
-                    Description = description,
-                    Point1 = gpss[0],
-                    Point2 = gpss[1]
-                };
+                result = new Parcel(number, description, gpss[0], gpss[1]);
             }
 
             return result;
@@ -67,15 +55,12 @@ namespace AAUS2_SemPraca.Utils
         #region private
         private GPSLocation[] GenerateGPSLocations()
         {
-            // generovanie nahodnych GPS lokalit, maximalne do 89 sirky a 179 dlzky aby sa neprelievali
-            var lat1 = Math.Round(_random.NextDouble() * 89, 4);
+            var lat1 = Math.Round(_random.NextDouble() * 89, 4);                                            // generovanie nahodnych GPS lokalit, maximalne do 89 sirky a 179 dlzky aby sa neprelievali
             var longt1 = Math.Round(_random.NextDouble() * 179, 4);
-            Coordinate latCoord = _random.Next(2) == 0 ? Coordinate.North : Coordinate.South;
-            Coordinate longCoord = _random.Next(2) == 0 ? Coordinate.East : Coordinate.West;
-
-            // logika, aby negenerovalo zbytocne velke objekty +- max 1.0 sirky a dlzky
-            var lat2 = Math.Round(_random.NextDouble(), 4) + lat1;
+            var lat2 = Math.Round(_random.NextDouble(), 4) + lat1;                                          // logika, aby negenerovalo zbytocne velke objekty +- max 1.0 sirky a dlzky
             var longt2 = Math.Round(_random.NextDouble(), 4) + longt1;
+            Coordinate latCoord = _random.Next(2) == 0 ? Coordinate.North : Coordinate.South;               // nahodny vyber kvadrantu
+            Coordinate longCoord = _random.Next(2) == 0 ? Coordinate.East : Coordinate.West;
 
             GPSLocation[] result =
             [

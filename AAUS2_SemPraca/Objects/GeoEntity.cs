@@ -7,16 +7,21 @@ namespace AAUS2_SemPraca.Objects
         private GPSLocation point2;
 
         protected int ID { get; }
-        public required int Number { get; set; }
+        public int Number { get; set; }
         public string? Description { get; set; }
         public List<GeoEntity> SubAreas { get; set; } = new();
-        public required GPSLocation Point1 { get; set; }
-        public required GPSLocation Point2 { get; set; }
+        public GPSLocation Point1 { get; }
+        public GPSLocation Point2 { get; }
         protected double[] LowerLeft { get; }
         protected double[] UpperRight { get; }
 
-        public GeoEntity()
+        public GeoEntity(int number, string description, GPSLocation point1, GPSLocation point2)
         {
+            Number = number;
+            Description = description;
+            Point1 = point1;
+            Point2 = point2;
+
             var value1 = Point1.GPSToDouble();
             var value2 = Point2.GPSToDouble();
 
