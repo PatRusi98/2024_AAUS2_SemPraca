@@ -13,7 +13,7 @@ namespace AAUS2_SemPraca
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
 
-            // get instance of the project
+            // instancia projektu
             SemProject project = SemProject.Instance;
         }
     }

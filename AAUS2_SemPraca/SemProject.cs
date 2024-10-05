@@ -1,17 +1,19 @@
 ﻿using AAUS2_SemPraca.Objects;
+using AAUS2_SemPraca.Utils;
 
 namespace AAUS2_SemPraca
 {
     public class SemProject
     {
         private static SemProject? _instance;
+        public Generator DataGenerator { get; private set; }
 
         /*
          * Privatny konstruktor pre semestralny projekt
          */
         private SemProject()
         {
-
+            DataGenerator = Generator.GetInstance();
         }
 
         /*
@@ -22,9 +24,8 @@ namespace AAUS2_SemPraca
             get
             {
                 if (_instance == null)
-                {
                     _instance = new();
-                }
+
                 return _instance;
             }
         }
@@ -32,7 +33,7 @@ namespace AAUS2_SemPraca
         /*
          * Operacia 1: Vyhladanie nehnutelnosti
          */
-        public List<Estate> SearchAllEstatesInLocation(GPSLocation location)
+        public List<Property> SearchAllEstatesInLocation(GPSLocation location)
         {
             throw new NotImplementedException();
         }
@@ -48,7 +49,7 @@ namespace AAUS2_SemPraca
         /*
          * Operacia 3: Vyhladanie vsetkych objektov
          */
-        public List<Area> SearchAllObjectsInLocation(GPSLocation location)
+        public List<GeoEntity> SearchAllObjectsInLocation(GPSLocation location)
         {
             throw new NotImplementedException();
         }
@@ -56,7 +57,7 @@ namespace AAUS2_SemPraca
         /*
          * Operacia 4: Pridanie nehnutelnosti
          */
-        public bool AddEstate(Estate estate)
+        public bool AddEstate(Property estate)
         {
             throw new NotImplementedException();
         }
