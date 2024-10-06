@@ -55,7 +55,7 @@
                 throw new InvalidOperationException("Parent node is null!");
         }
 
-        public List<T> RangeSearch(K[] target, Func<T, bool> condition) // vyhladavanie v oblasti s externou podmienkou (implementovanou v entite)
+        public List<T> RangeSearch(K[] target, Func<T, bool> condition)
         {
             if (Root == null)                                           // ak neexistuje root, strom je prazdny, vrat prazdny zoznam
                 return new();

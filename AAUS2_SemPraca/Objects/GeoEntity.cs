@@ -12,8 +12,8 @@ namespace AAUS2_SemPraca.Objects
         public List<GeoEntity> SubAreas { get; set; } = new();
         public GPSLocation Point1 { get; }
         public GPSLocation Point2 { get; }
-        protected double[] LowerLeft { get; }
-        protected double[] UpperRight { get; }
+        public double[] LowerLeft { get; }
+        public double[] UpperRight { get; }
 
         public GeoEntity(int number, string description, GPSLocation point1, GPSLocation point2)
         {
