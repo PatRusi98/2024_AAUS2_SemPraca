@@ -1,8 +1,9 @@
-﻿using AAUS2_SemPraca.Utils;
+﻿using AAUS2_SemPraca.Struct;
+using AAUS2_SemPraca.Utils;
 
 namespace AAUS2_SemPraca.Objects
 {
-    public abstract class GeoEntity
+    public abstract class GeoEntity : IMultiKey
     {
         private GPSLocation point2;
 
@@ -12,8 +13,6 @@ namespace AAUS2_SemPraca.Objects
         public List<GeoEntity> SubAreas { get; set; } = new();
         public GPSLocation Point1 { get; }
         public GPSLocation Point2 { get; }
-        public double[] LowerLeft { get; }
-        public double[] UpperRight { get; }
 
         public GeoEntity(int number, string description, GPSLocation point1, GPSLocation point2)
         {
@@ -25,15 +24,11 @@ namespace AAUS2_SemPraca.Objects
             var value1 = Point1.GPSToDouble();
             var value2 = Point2.GPSToDouble();
 
-            if (Math.Min(value1[1], value2[1]) == value1[1])
+            if (Math.Min(value1[1], value2[1]) != value1[1])
             {
-                LowerLeft = value1;
-                UpperRight = value2;
-            }
-            else
-            {
-                LowerLeft = value2;
-                UpperRight = value1;
+                var tempPoint = Point1;
+                Point1 = Point2;
+                Point2 = tempPoint;
             }
         }
 
@@ -41,5 +36,7 @@ namespace AAUS2_SemPraca.Objects
         {
             entities.ForEach(x => SubAreas.Add(x));
         }
+
+        public object[] GetKeys() => Point1.GPSToDouble().Select(x => (object)x).ToArray();
     }
 }
