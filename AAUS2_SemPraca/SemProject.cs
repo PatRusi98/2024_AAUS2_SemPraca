@@ -7,9 +7,10 @@ namespace AAUS2_SemPraca
     public class SemProject
     {
         private static SemProject? _instance = null;
-        private Generator DataGenerator { get; }
-        private KDTree<Parcel, double> TreeParcel { get; } = new();
-        private KDTree<Property, double> TreeProperty { get; } = new();
+        private Generator DataGenerator { get; set; }
+        private KDTree<Parcel> TreeParcel { get; } = new();
+        private KDTree<Property> TreeProperty { get; } = new();
+        private KDTree<GeoEntity> TreeObjects { get; } = new();
 
         /*
          * Privatny konstruktor pre semestralny projekt
@@ -70,6 +71,7 @@ namespace AAUS2_SemPraca
                 Longitude = long1,
                 LongCoord = longCoord1.CharToCoordinate()
             };
+
             var gps2 = new GPSLocation()
             {
                 Latitude = lat2,
@@ -85,7 +87,7 @@ namespace AAUS2_SemPraca
                                     gps2
                                 );
 
-            TreeProperty.Insert(propertyToAdd, propertyToAdd.LowerLeft);
+            TreeProperty.Insert(propertyToAdd);
         }
 
         /*
@@ -101,6 +103,7 @@ namespace AAUS2_SemPraca
                 Longitude = long1,
                 LongCoord = longCoord1.CharToCoordinate()
             };
+
             var gps2 = new GPSLocation()
             {
                 Latitude = lat2,
@@ -116,7 +119,7 @@ namespace AAUS2_SemPraca
                                     gps2
                                 );
 
-            TreeParcel.Insert(parcelToAdd, parcelToAdd.LowerLeft);
+            TreeParcel.Insert(parcelToAdd);
         }
 
         /*
@@ -163,7 +166,8 @@ namespace AAUS2_SemPraca
             {
                 var propertyToAdd = DataGenerator.GenerateEntity(Enums.GeoEntityType.Property);
                 // TODO: najst vsetky parcely v oblasti a pridat ich do zoznamu
-                TreeProperty.Insert((Property)propertyToAdd, propertyToAdd.LowerLeft);
+                if (propertyToAdd is Property property)
+                    TreeProperty.Insert(property);
             }
         }
 
@@ -179,7 +183,8 @@ namespace AAUS2_SemPraca
             {
                 var parcelToAdd = DataGenerator.GenerateEntity(Enums.GeoEntityType.Parcel);
                 // TODO: najst vsetky nehnutelnosti v oblasti a pridat ich do zoznamu
-                TreeParcel.Insert((Parcel)parcelToAdd, parcelToAdd.LowerLeft);
+                if (parcelToAdd is Parcel parcel)
+                    TreeParcel.Insert(parcel);
             }
         }
 
@@ -197,12 +202,12 @@ namespace AAUS2_SemPraca
                 if (entityToAdd is Property property)
                 {
                     // TODO: najst vsetky parcely v oblasti a pridat ich do zoznamu
-                    TreeProperty.Insert(property, property.LowerLeft);
+                    TreeProperty.Insert(property);
                 }
                 else if (entityToAdd is Parcel parcel)
                 {
                     // TODO: najst vsetky nehnutelnosti v oblasti a pridat ich do zoznamu
-                    TreeParcel.Insert(parcel, parcel.LowerLeft);
+                    TreeParcel.Insert(parcel);
                 }
             }
         }

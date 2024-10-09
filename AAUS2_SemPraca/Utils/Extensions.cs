@@ -45,6 +45,16 @@ namespace AAUS2_SemPraca.Utils
             return [latitude, longitude];
         }
 
+        public static int CompareKeys(this object valueKey, object currNodeKey)
+        {
+            if (valueKey is IComparable a && currNodeKey is IComparable b)
+            {
+                return a.CompareTo(b);
+            }
+
+            throw new ArgumentException("Key is not comparable!");
+        }
+
         #region private
         private static double GPSDoublePosition(double value, Coordinate coord)
         {
