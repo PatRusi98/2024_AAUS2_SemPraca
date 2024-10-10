@@ -42,27 +42,41 @@ namespace AAUS2_SemPraca.Tester
             return inserted;
         }
 
-        public bool TestSearch(List<TestEntity> entities)
+        public bool TestSearch(List<TestEntity> entities, int numberOfIterations = 0)
         {
-            while (entities.Count > 0)
+            if (entities.Count < 1)
+                return true;
+
+            var internalList = entities;
+            if (numberOfIterations == 0)
+                numberOfIterations = internalList.Count;
+
+            for (int i = 0; i < numberOfIterations; i++)
             {
-                var entityToSearch = entities[_random.Next(entities.Count)];
+                var entityToSearch = internalList[_random.Next(internalList.Count)];
                 var found = TestTree.Search(entityToSearch);
-                if (found == null) 
+                if (found == null)
                     return false;
-                entities.Remove(entityToSearch);
+                internalList.Remove(entityToSearch);
             }
 
             return true;
         }
 
-        public bool TestDelete(List<TestEntity> entities)
+        public bool TestDelete(List<TestEntity> entities, int numberOfIterations = 0)
         {
-            while (entities.Count > 0)
+            if (entities.Count < 1)
+                return true;
+
+            var internalList = entities;
+            if (numberOfIterations == 0)
+                numberOfIterations = internalList.Count;
+
+            for (int i = 0; i < numberOfIterations; i++)
             {
-                var entityToDelete = entities[_random.Next(entities.Count)];
+                var entityToDelete = internalList[_random.Next(internalList.Count)];
                 TestTree.Delete(entityToDelete);
-                entities.Remove(entityToDelete);
+                internalList.Remove(entityToDelete);
 
                 if (TestTree.Search(entityToDelete) != null)
                     return false;
@@ -71,9 +85,50 @@ namespace AAUS2_SemPraca.Tester
             return true;
         }
 
+        public bool CreateTestCase(int numberOfIterations, int insertProb, int searchProb, int deleteProb)
+        {
+            ClearTree();
+
+            var combinedProb = insertProb + searchProb + deleteProb;
+            double insert = insertProb / combinedProb;
+            double search = searchProb / combinedProb;
+            double delete = deleteProb / combinedProb;
+            var searched = new List<TestEntity>();
+            bool ok = true;
+
+            for (int i = 0; i < numberOfIterations; i++)
+            {
+                var operation = _random.NextDouble();
+
+                switch (operation)
+                {
+                    case var expression when operation < insert:
+                        searched.Add(TestInsert(1)[0]);
+                        break;
+                    case var expression when operation < search:
+                        ok = TestSearch(searched, 1);
+                        if (!ok)
+                            return false;
+                        break;
+                    case var expression when operation > search:
+                        ok = TestDelete(searched, 1);
+                        if (!ok)
+                            return false;
+                        break;
+                    default:
+                        throw new ArgumentException("Something went wrong in CreateTestCase!");
+                }
+            }
+
+            return ok;
+        }
+
+        #region private
+
         private void ClearTree()
         {
             TestTree = new();
         }
+        #endregion
     }
 }
