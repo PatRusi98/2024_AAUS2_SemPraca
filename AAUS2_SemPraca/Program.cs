@@ -28,8 +28,9 @@ namespace AAUS2_SemPraca
 
             // tester
             StructTester tester = StructTester.Instance;
-            var inserted = tester.TestInsert(100000);
-            var search = tester.TestSearch(inserted);
+            //var inserted = tester.TestInsert(100000);
+            //var search = tester.TestSearch(inserted);
+            var success = tester.CreateTestCase(100000, 70, 30, 0);
 
             Console.WriteLine("success");
         }
