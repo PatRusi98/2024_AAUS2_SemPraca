@@ -10,35 +10,29 @@ namespace AAUS2_SemPraca.Utils
 
         private Generator() { }
 
-        public static Generator GetInstance()
+        public static Generator Instance
         {
-            if (_instance == null)
-                _instance = new();
-
-            return _instance;
+            get 
+            {
+                if (_instance == null)
+                    _instance = new();
+                
+                return _instance;
+            }
         }
 
         public GeoEntity GenerateEntity(GeoEntityType type = GeoEntityType.Unknown)
         {
-            bool property = false;
-
-            switch (type)
+            var property = type switch
             {
-                case GeoEntityType.Parcel:
-                    property = false;
-                    break;
-                case GeoEntityType.Property:
-                    property = true;
-                    break;
-                default:
-                    property = _random.Next() % 2 == 0;
-                    break;
-            }
-
+                GeoEntityType.Parcel => false,
+                GeoEntityType.Property => true,
+                _ => _random.Next() % 2 == 0,
+            };
             var number = _random.Next();
             var gpss = GenerateGPSLocations();
             var description = "Description of " + (property ? "property" : "parcel") + " number: " + number;
-            GeoEntity result = null;
+            GeoEntity result;
 
             if (property)
             {

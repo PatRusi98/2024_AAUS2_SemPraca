@@ -1,9 +1,6 @@
 ﻿namespace AAUS2_SemPraca.Objects
 {
-    public class Property : GeoEntity
+    public class Property(int number, string description, GPSLocation point1, GPSLocation point2) : GeoEntity(number, description, point1, point2)
     {
-        public Property(int number, string description, GPSLocation point1, GPSLocation point2) : base(number, description, point1, point2)
-        {
-        }
     }
 }

@@ -1,23 +1,22 @@
 ﻿using AAUS2_SemPraca.Objects;
-using AAUS2_SemPraca.Struct;
 using AAUS2_SemPraca.Utils;
+using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca
 {
     public class SemProject
     {
         private static SemProject? _instance = null;
+        private GeoSystemHandler Handler { get; set; }
         private Generator DataGenerator { get; set; }
-        private KDTree<Parcel> TreeParcel { get; } = new();
-        private KDTree<Property> TreeProperty { get; } = new();
-        private KDTree<GeoEntity> TreeObjects { get; } = new();
 
         /*
          * Privatny konstruktor pre semestralny projekt
          */
         private SemProject()
         {
-            DataGenerator = Generator.GetInstance();
+            Handler = GeoSystemHandler.Instance;
+            DataGenerator = Generator.Instance;
         }
 
         /*
@@ -27,8 +26,7 @@ namespace AAUS2_SemPraca
         {
             get
             {
-                if (_instance == null)
-                    _instance = new();
+                _instance ??= new();
 
                 return _instance;
             }
@@ -37,25 +35,51 @@ namespace AAUS2_SemPraca
         /*
          * Operacia 1: Vyhladanie nehnutelnosti
          */
-        public List<Property> SearchAllPropertiesInLocation(GPSLocation location)
+        public List<Property> SearchAllPropertiesOnLocation(double lat, char latCoord, double lon, char lonCoord)
         {
-            throw new NotImplementedException();
+            var gps = new GPSLocation()
+            {
+                Latitude = lat,
+                LatCoord = latCoord.CharToCoordinate(),
+                Longitude = lon,
+                LongCoord = lonCoord.CharToCoordinate()
+            };
+
+            var properties = Handler.Search(gps, GeoEntityType.Property);
+            return properties.Cast<Property>().ToList();
         }
 
         /*
          * Operacia 2: Vyhladanie parciel
          */
-        public List<Parcel> SearchAllParcelsInLocation(GPSLocation location)
+        public List<Parcel> SearchAllParcelsOnLocation(double lat, char latCoord, double lon, char lonCoord)
         {
-            throw new NotImplementedException();
+            var gps = new GPSLocation()
+            {
+                Latitude = lat,
+                LatCoord = latCoord.CharToCoordinate(),
+                Longitude = lon,
+                LongCoord = lonCoord.CharToCoordinate()
+            };
+
+            var parcels = Handler.Search(gps, GeoEntityType.Property);
+            return parcels.Cast<Parcel>().ToList();
         }
 
         /*
          * Operacia 3: Vyhladanie vsetkych objektov
          */
-        public List<GeoEntity> SearchAllObjectsInLocation(GPSLocation location)
+        public List<GeoEntity> SearchAllObjectsOnLocation(double lat, char latCoord, double lon, char lonCoord)
         {
-            throw new NotImplementedException();
+            var gps = new GPSLocation()
+            {
+                Latitude = lat,
+                LatCoord = latCoord.CharToCoordinate(),
+                Longitude = lon,
+                LongCoord = lonCoord.CharToCoordinate()
+            };
+
+            return Handler.Search(gps);
         }
 
         /*
@@ -87,7 +111,7 @@ namespace AAUS2_SemPraca
                                     gps2
                                 );
 
-            TreeProperty.Insert(propertyToAdd);
+            Handler.Insert(propertyToAdd);
         }
 
         /*
@@ -119,39 +143,39 @@ namespace AAUS2_SemPraca
                                     gps2
                                 );
 
-            TreeParcel.Insert(parcelToAdd);
+            Handler.Insert(parcelToAdd);
         }
 
         /*
          * Operacia 6: Editacia nehnutelnosti
          */
-        public bool EditProperty(GPSLocation location)
+        public bool EditProperty(Property propertyToEdit, GeoEntityParams par)
         {
-            throw new NotImplementedException();
+            return Handler.Update(propertyToEdit, par);
         }
 
         /*
          * Operacia 7: Editacia parcely
          */
-        public bool EditParcel(GPSLocation location)
+        public bool EditParcel(Parcel parcelToEdit, GeoEntityParams par)
         {
-            throw new NotImplementedException();
+            return Handler.Update(parcelToEdit, par);
         }
 
         /*
          * Operacia 8: Vyradenie nehnutelnosti
          */
-        public bool DeleteProperty(GPSLocation location)
+        public bool DeleteProperty(Property propertyToDelete)
         {
-            throw new NotImplementedException();
+            return Handler.Delete(propertyToDelete);
         }
 
         /*
          * Operacia 9: Vyradenie parcely
          */
-        public bool DeleteParcel(GPSLocation location)
+        public bool DeleteParcel(Parcel parcelToDelete)
         {
-            throw new NotImplementedException();
+            return Handler.Delete(parcelToDelete);
         }
 
         /*
@@ -165,9 +189,9 @@ namespace AAUS2_SemPraca
             for (int i = 0; i < number; i++)
             {
                 var propertyToAdd = DataGenerator.GenerateEntity(Enums.GeoEntityType.Property);
-                // TODO: najst vsetky parcely v oblasti a pridat ich do zoznamu
+
                 if (propertyToAdd is Property property)
-                    TreeProperty.Insert(property);
+                    Handler.Insert(property);
             }
         }
 
@@ -182,9 +206,9 @@ namespace AAUS2_SemPraca
             for (int i = 0; i < number; i++)
             {
                 var parcelToAdd = DataGenerator.GenerateEntity(Enums.GeoEntityType.Parcel);
-                // TODO: najst vsetky nehnutelnosti v oblasti a pridat ich do zoznamu
+
                 if (parcelToAdd is Parcel parcel)
-                    TreeParcel.Insert(parcel);
+                    Handler.Insert(parcel);
             }
         }
 
@@ -199,16 +223,11 @@ namespace AAUS2_SemPraca
             for (int i = 0; i < number; i++)
             {
                 var entityToAdd = DataGenerator.GenerateEntity();
+
                 if (entityToAdd is Property property)
-                {
-                    // TODO: najst vsetky parcely v oblasti a pridat ich do zoznamu
-                    TreeProperty.Insert(property);
-                }
+                    Handler.Insert(property);
                 else if (entityToAdd is Parcel parcel)
-                {
-                    // TODO: najst vsetky nehnutelnosti v oblasti a pridat ich do zoznamu
-                    TreeParcel.Insert(parcel);
-                }
+                    Handler.Insert(parcel);
             }
         }
     }

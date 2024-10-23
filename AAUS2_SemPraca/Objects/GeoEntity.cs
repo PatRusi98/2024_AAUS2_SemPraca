@@ -1,18 +1,29 @@
-﻿using AAUS2_SemPraca.Struct;
-using AAUS2_SemPraca.Utils;
+﻿using AAUS2_SemPraca.Utils;
 
 namespace AAUS2_SemPraca.Objects
 {
-    public abstract class GeoEntity : IMultiKey
+    public abstract class GeoEntity
     {
-        private GPSLocation point2;
-
         protected int ID { get; }
         public int Number { get; set; }
         public string? Description { get; set; }
         public List<GeoEntity> SubAreas { get; set; } = new();
-        public GPSLocation Point1 { get; }
-        public GPSLocation Point2 { get; }
+        public GPSLocation Point1 { get; set; }
+        public GPSLocation Point2 { get; set; }
+        public double[] Key1
+        {
+            get
+            {
+                return Point1.GPSToDouble();
+            }
+        }
+        public double[] Key2 
+        {
+            get
+            {
+                return Point2.GPSToDouble();
+            }
+        }
 
         public GeoEntity(int number, string description, GPSLocation point1, GPSLocation point2)
         {
@@ -26,9 +37,7 @@ namespace AAUS2_SemPraca.Objects
 
             if (Math.Min(value1[1], value2[1]) != value1[1])
             {
-                var tempPoint = Point1;
-                Point1 = Point2;
-                Point2 = tempPoint;
+                (Point2, Point1) = (Point1, Point2);
             }
         }
 
@@ -36,7 +45,5 @@ namespace AAUS2_SemPraca.Objects
         {
             entities.ForEach(x => SubAreas.Add(x));
         }
-
-        public object[] GetKeys() => Point1.GPSToDouble().Select(x => (object)x).ToArray();
     }
 }

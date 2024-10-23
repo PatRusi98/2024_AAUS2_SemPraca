@@ -1,4 +1,5 @@
 ﻿using AAUS2_SemPraca.Utils;
+using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Struct
 {
@@ -9,19 +10,19 @@ namespace AAUS2_SemPraca.Struct
 
         public KDTree() { }
 
-        public void Insert(T value)              // pozn.cvicenie: doplnit si vlastny komparator!!! Key1 neposielat, posielat objekt s komparatorom (T value)
+        public (bool, DebugCode) Insert(T value)              // pozn.cvicenie: doplnit si vlastny komparator!!! Key1 neposielat, posielat objekt s komparatorom (T value)
         {
-            if (Root == null)                                                                   // ak neexistuje root, vkladany prvok sa nim stane a dimenzia jeho kluca urci dimenziu stromu
+            if (Root == null)                                                                   // ak neexistuje localRoot, vkladany prvok sa nim stane a dimenzia jeho kluca urci dimenziu stromu
             {
                 Root = new(value);
                 Dimensions = value.GetKeys().Length;
-                return;
+                return (true, DebugCode.Success);
             }
 
             if (value.GetKeys().Length != Dimensions)                                           // kontrola dimenzii kluca
-                throw new ArgumentException("Wrong key dimension!");
+                return (false, DebugCode.WrongKeyDimension);
 
-            KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny node na root, kedze prehladavam od korena
+            KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny node na localRoot, kedze prehladavam od korena
             KDTreeNode<T>? parentNode = null;
             bool isLeft = true;
             int depth = 0;
@@ -31,14 +32,32 @@ namespace AAUS2_SemPraca.Struct
                 parentNode = currNode;
                 int axis = depth % Dimensions;                                                  // podla ktoreho kluca sa rozhodujem
 
-                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) < 0)      // porovnanie klucov v danej dimenzii
+                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) == 0)
                 {
-                    currNode = currNode.LeftSon;                                                //ak je kluc mensi, ideme cestou dolava
+                    var isDuplicate = true;
+                    for (int i = 0; i < Dimensions; i++)
+                    {
+                        if (value.GetKeys()[i].CompareKeys(currNode.Value.GetKeys()[i]) != 0)
+                        {
+                            isDuplicate = false;
+                            break;
+                        }
+                    }
+                    if (isDuplicate)
+                    {
+                        currNode.Duplicates.Add(new(value));
+                        return (true, DebugCode.Success);
+                    }
+                }
+
+                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)      // porovnanie klucov v danej dimenzii
+                {
+                    currNode = currNode.LeftSon;                                                // ak je kluc mensi, ideme cestou dolava
                     isLeft = true;
                 }
                 else
                 {
-                    currNode = currNode.RightSon;                                               //ak je kluc vacsi, ideme cestou doprava
+                    currNode = currNode.RightSon;                                               // ak je kluc vacsi, ideme cestou doprava
                     isLeft = false;
                 }
 
@@ -50,28 +69,32 @@ namespace AAUS2_SemPraca.Struct
             else if (parentNode != null)
                 parentNode.RightSon = new(value);
             else
-                throw new InvalidOperationException("Parent node is null!");
+                return (false, DebugCode.NullParent);
+
+            return (true, DebugCode.Success);
         }
 
-        public T? Search(T value)                                                               //bodove vyhladavanie na operacie s konkretymi prvkami
+        public List<T>? Search(T value)                                                               // bodove vyhladavanie na operacie s konkretymi prvkami
         {
-            if (Root == null)                                                                   // ak neexistuje root, strom je prazdny
+            if (Root == null)                                                                   // ak neexistuje localRoot, strom je prazdny
                 return default;
 
             if (value.GetKeys().Length != Dimensions)                                           // kontrola dimenzii kluca
                 throw new ArgumentException("Wrong key dimension!");
 
-            KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny node na root, kedze prehladavam od korena
+            List<T>? found = new(); 
+
+            KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny node na localRoot, kedze prehladavam od korena
             int depth = 0;
 
             while (currNode != null)                                                            // pokial sa nedostaneme do listu (nema syna)
             {
                 if (currNode.Value.GetKeys().SequenceEqual(value.GetKeys()))                    // ak sa kluc zhoduje s hladanym klucom, vrat prvok
-                    return currNode.Value;
+                    found.Add(currNode.Value);
 
                 int axis = depth % Dimensions;
 
-                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) < 0)      // porovnanie klucov v danej dimenzii
+                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)     // porovnanie klucov v danej dimenzii
                     currNode = currNode.LeftSon;                                                // ak je kluc mensi, ideme dolava
                 else
                     currNode = currNode.RightSon;                                               // ak je kluc vacsi, ideme doprava
@@ -79,16 +102,16 @@ namespace AAUS2_SemPraca.Struct
                 depth++;
             }
 
-            return default;
+            return found;
         }
 
-        public void Delete(T value)
+        public (bool, DebugCode) Delete(T value)
         {
             if (Root == null)                                                                   // ak je strom prazdny
-                return;
+                return (false, DebugCode.EmptyTree);
 
             if (value.GetKeys().Length != Dimensions)                                           // kontrola dimenzii kluca
-                throw new ArgumentException("Wrong key dimension!");
+                return (false, DebugCode.WrongKeyDimension);
 
             KDTreeNode<T>? currNode = Root;
             KDTreeNode<T>? parentNode = null;
@@ -103,7 +126,7 @@ namespace AAUS2_SemPraca.Struct
                 parentNode = currNode;
                 int axis = depth % Dimensions;
 
-                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) < 0)      // porovnanie klucov v danej dimenzii
+                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)      // porovnanie klucov v danej dimenzii
                 {
                     currNode = currNode.LeftSon;
                     isLeft = true;
@@ -117,36 +140,83 @@ namespace AAUS2_SemPraca.Struct
                 depth++;
             }
 
+            //TODO
             if (currNode == null)                                                               // ak sa prvok nenasiel, nemame co zmazat
-                return;
+                return(false, DebugCode.Unknown);
 
-            // ak je list, zmazat, nastavit v parentovi null
-            // ak ma praveho syna, prehladat podstrom praveho syna a najst najmensi prvok, nahradit tymto prvkom hladany prvok a zmazat najdeny a potom cyklicky prehladavat az kym nenajdeme list
-            // ak ma laveho syna, prehladat podstrom laveho syna a najst najvacsi prvok, nahradit tymto prvkom hladany prvok a zmazat najdeny a potom cyklicky prehladavat az kym nenajdeme list
+            if (currNode.LeftSon == null && currNode.RightSon == null)                          // ak je listom (nema synov)
+            {
+                if (parentNode == null)                                                         // ak je mazany prvok localRoot
+                    Root = null;
+                else if (isLeft)                                                                // ak je mazany prvok lavy syn
+                    parentNode.LeftSon = null;
+                else
+                    parentNode.RightSon = null;
 
-            //if ()
-            //{
+                //TODO
+                return (false, DebugCode.Unknown);
+            }
 
-            //    return;
-            //}
-            //else if ()
-            //{
-
-            //    return;
-            //}
-            //else if (currNode.LeftSon == null && currNode.RightSon == null)                     // ak je listom (nema synov)
-            //{
-            //    if (parentNode == null)                                                         // ak je mazany prvok root
-            //        Root = null;
-            //    else if (isLeft)                                                                // ak je mazany prvok lavy syn
-            //        parentNode.LeftSon = null;
-            //    else
-            //        parentNode.RightSon = null;
-
-            //    return;
-            //}
-
-            throw new ArgumentException("Something went wrong.");
+            return (false, DebugCode.Unknown);
         }
+
+        #region private
+        private (KDTreeNode<T>, bool) GetMinimum(KDTreeNode<T> localRoot, int localRootDepth, int keyPosition)
+        {
+            KDTreeNode<T>? min = null;
+            KDTreeNode<T>? currNode = localRoot;
+            int depth = localRootDepth;
+            var isLeaf = false;
+
+            while (currNode != null)
+            {
+                if(min == null)
+                    min = currNode;
+
+                if (currNode.LeftSon == null && currNode.RightSon == null)                                              // ak sme sa dostali do listu
+                {
+                    if (currNode.Value.GetKeys()[keyPosition].CompareKeys(min.Value.GetKeys()[keyPosition]) <= 0)       // ak je kluc na hladanej pozicii mensi alebo rovny ako min
+                        min = currNode;                                                                                 // nastav aktualny ako minimum
+
+                    isLeaf = true;
+                    return (min, isLeaf);
+                }
+
+                int axis = depth % Dimensions;
+                var hasLeft = currNode.LeftSon != null;
+                var hasRight = currNode.RightSon != null;
+                var hasBoth = (hasLeft && hasRight);
+
+                if (depth == keyPosition)
+                {
+                    min = currNode.LeftSon;
+                    currNode = currNode.LeftSon;
+                }
+                else
+                {
+                    
+                }
+                
+            }
+
+            return (min!, isLeaf);
+        }
+
+        private (KDTreeNode<T>, bool) GetMaximum(KDTreeNode<T> localRoot, int keyPosition)
+        {
+            KDTreeNode<T>? max = null;
+            KDTreeNode<T>? currNode = localRoot;
+            int depth = keyPosition;
+            var isLeaf = false;
+
+            while (currNode != null)
+            {
+                if(max == null)
+                    max = currNode;
+            }
+
+            return(max!, isLeaf);
+        }
+        #endregion
     }
 }

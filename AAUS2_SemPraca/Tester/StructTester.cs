@@ -1,12 +1,11 @@
 ﻿using AAUS2_SemPraca.Struct;
-using System.Xml;
 
 namespace AAUS2_SemPraca.Tester
 {
     public class StructTester
     {
-        private static StructTester _instance;
-        private Random _random = new();
+        private static StructTester? _instance;
+        private readonly Random _random = new();
         private KDTree<TestEntity> TestTree { get; set; } = new();
 
         private StructTester() { }

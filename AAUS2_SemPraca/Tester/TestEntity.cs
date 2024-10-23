@@ -2,16 +2,10 @@
 
 namespace AAUS2_SemPraca.Tester
 {
-    public class TestEntity : IMultiKey
+    public class TestEntity(double testValue1, double testValue2) : IMultiKey
     {
-        private double Key1;
-        private double Key2;
-
-        public TestEntity(double testValue1, double testValue2) 
-        {
-            Key1 = testValue1;
-            Key2 = testValue2;
-        }
+        private readonly double Key1 = testValue1;
+        private readonly double Key2 = testValue2;
 
         public object[] GetKeys()
         {

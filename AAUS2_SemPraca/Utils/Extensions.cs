@@ -12,19 +12,14 @@ namespace AAUS2_SemPraca.Utils
         
         public static Coordinate CharToCoordinate(this char c)
         {
-            switch (c) 
+            return c switch
             {
-                case 'E':
-                    return Coordinate.East;
-                case 'N':
-                    return Coordinate.North;
-                case 'S':
-                    return Coordinate.South;
-                case 'W':
-                    return Coordinate.West;
-                default:
-                    return Coordinate.Unknown;
-            }
+                'E' => Coordinate.East,
+                'N' => Coordinate.North,
+                'S' => Coordinate.South,
+                'W' => Coordinate.West,
+                _ => Coordinate.Unknown,
+            };
         }
 
         public static bool IsLatitude(this Coordinate coordinate)
@@ -58,19 +53,14 @@ namespace AAUS2_SemPraca.Utils
         #region private
         private static double GPSDoublePosition(double value, Coordinate coord)
         {
-            switch (coord)                                                                  // prehodenie gps pozicii do double - sirka od 0.0 do 180.0 a dlzka od 0.0 do 360.0
+            return coord switch                                                             // prehodenie gps pozicii do double - sirka od 0.0 do 180.0 a dlzka od 0.0 do 360.0
             {                                                                               // kvoli klucom - jednoduchsie ako porovnavat v strome GPSPosition
-                case Coordinate.North:
-                    return 90.00 + value;
-                case Coordinate.East:
-                    return 180.00 + value;
-                case Coordinate.South:
-                    return 90.00 - value;
-                case Coordinate.West:
-                    return 180.00 - value;
-                default:
-                    return Double.MinValue;
-            }
+                Coordinate.North => 90.00 + value,
+                Coordinate.East => 180.00 + value,
+                Coordinate.South => 90.00 - value,
+                Coordinate.West => 180.00 - value,
+                _ => Double.MinValue,
+            };
         }
 
         #endregion
