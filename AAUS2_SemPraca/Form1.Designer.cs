@@ -30,26 +30,28 @@
         {
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
-            parcelToolStripMenuItem = new ToolStripMenuItem();
-            propertyToolStripMenuItem = new ToolStripMenuItem();
-            allObjectsToolStripMenuItem = new ToolStripMenuItem();
-            generatorToolStripMenuItem = new ToolStripMenuItem();
             newToolStripMenuItem = new ToolStripMenuItem();
             loadFromFileToolStripMenuItem = new ToolStripMenuItem();
             saveToFileToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
+            parcelToolStripMenuItem = new ToolStripMenuItem();
             insertToolStripMenuItem = new ToolStripMenuItem();
             searchToolStripMenuItem = new ToolStripMenuItem();
+            propertyToolStripMenuItem = new ToolStripMenuItem();
             insertToolStripMenuItem1 = new ToolStripMenuItem();
             searchToolStripMenuItem1 = new ToolStripMenuItem();
+            allObjectsToolStripMenuItem = new ToolStripMenuItem();
             findByPointToolStripMenuItem = new ToolStripMenuItem();
             findAllObjectsToolStripMenuItem = new ToolStripMenuItem();
+            generatorToolStripMenuItem = new ToolStripMenuItem();
             generateToolStripMenuItem = new ToolStripMenuItem();
             parcelsToolStripMenuItem = new ToolStripMenuItem();
             propertiesToolStripMenuItem = new ToolStripMenuItem();
             randomObjectsToolStripMenuItem = new ToolStripMenuItem();
             randomOperationsToolStripMenuItem = new ToolStripMenuItem();
             dataGridView1 = new DataGridView();
+            findAllToolStripMenuItem = new ToolStripMenuItem();
+            findAllToolStripMenuItem1 = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
@@ -70,34 +72,6 @@
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(54, 29);
             fileToolStripMenuItem.Text = "File";
-            // 
-            // parcelToolStripMenuItem
-            // 
-            parcelToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { insertToolStripMenuItem, searchToolStripMenuItem });
-            parcelToolStripMenuItem.Name = "parcelToolStripMenuItem";
-            parcelToolStripMenuItem.Size = new Size(73, 29);
-            parcelToolStripMenuItem.Text = "Parcel";
-            // 
-            // propertyToolStripMenuItem
-            // 
-            propertyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { insertToolStripMenuItem1, searchToolStripMenuItem1 });
-            propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
-            propertyToolStripMenuItem.Size = new Size(96, 29);
-            propertyToolStripMenuItem.Text = "Property";
-            // 
-            // allObjectsToolStripMenuItem
-            // 
-            allObjectsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { findByPointToolStripMenuItem, findAllObjectsToolStripMenuItem });
-            allObjectsToolStripMenuItem.Name = "allObjectsToolStripMenuItem";
-            allObjectsToolStripMenuItem.Size = new Size(113, 29);
-            allObjectsToolStripMenuItem.Text = "All Objects";
-            // 
-            // generatorToolStripMenuItem
-            // 
-            generatorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { generateToolStripMenuItem, randomOperationsToolStripMenuItem });
-            generatorToolStripMenuItem.Name = "generatorToolStripMenuItem";
-            generatorToolStripMenuItem.Size = new Size(106, 29);
-            generatorToolStripMenuItem.Text = "Generator";
             // 
             // newToolStripMenuItem
             // 
@@ -123,6 +97,13 @@
             exitToolStripMenuItem.Size = new Size(270, 34);
             exitToolStripMenuItem.Text = "Exit";
             // 
+            // parcelToolStripMenuItem
+            // 
+            parcelToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { insertToolStripMenuItem, searchToolStripMenuItem, findAllToolStripMenuItem1 });
+            parcelToolStripMenuItem.Name = "parcelToolStripMenuItem";
+            parcelToolStripMenuItem.Size = new Size(73, 29);
+            parcelToolStripMenuItem.Text = "Parcel";
+            // 
             // insertToolStripMenuItem
             // 
             insertToolStripMenuItem.Name = "insertToolStripMenuItem";
@@ -134,6 +115,13 @@
             searchToolStripMenuItem.Name = "searchToolStripMenuItem";
             searchToolStripMenuItem.Size = new Size(270, 34);
             searchToolStripMenuItem.Text = "Search";
+            // 
+            // propertyToolStripMenuItem
+            // 
+            propertyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { insertToolStripMenuItem1, searchToolStripMenuItem1, findAllToolStripMenuItem });
+            propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
+            propertyToolStripMenuItem.Size = new Size(96, 29);
+            propertyToolStripMenuItem.Text = "Property";
             // 
             // insertToolStripMenuItem1
             // 
@@ -147,6 +135,13 @@
             searchToolStripMenuItem1.Size = new Size(270, 34);
             searchToolStripMenuItem1.Text = "Search";
             // 
+            // allObjectsToolStripMenuItem
+            // 
+            allObjectsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { findByPointToolStripMenuItem, findAllObjectsToolStripMenuItem });
+            allObjectsToolStripMenuItem.Name = "allObjectsToolStripMenuItem";
+            allObjectsToolStripMenuItem.Size = new Size(113, 29);
+            allObjectsToolStripMenuItem.Text = "All Objects";
+            // 
             // findByPointToolStripMenuItem
             // 
             findByPointToolStripMenuItem.Name = "findByPointToolStripMenuItem";
@@ -158,6 +153,13 @@
             findAllObjectsToolStripMenuItem.Name = "findAllObjectsToolStripMenuItem";
             findAllObjectsToolStripMenuItem.Size = new Size(270, 34);
             findAllObjectsToolStripMenuItem.Text = "Find all objects";
+            // 
+            // generatorToolStripMenuItem
+            // 
+            generatorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { generateToolStripMenuItem, randomOperationsToolStripMenuItem });
+            generatorToolStripMenuItem.Name = "generatorToolStripMenuItem";
+            generatorToolStripMenuItem.Size = new Size(106, 29);
+            generatorToolStripMenuItem.Text = "Generator";
             // 
             // generateToolStripMenuItem
             // 
@@ -198,6 +200,18 @@
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.Size = new Size(1957, 876);
             dataGridView1.TabIndex = 1;
+            // 
+            // findAllToolStripMenuItem
+            // 
+            findAllToolStripMenuItem.Name = "findAllToolStripMenuItem";
+            findAllToolStripMenuItem.Size = new Size(270, 34);
+            findAllToolStripMenuItem.Text = "Find All";
+            // 
+            // findAllToolStripMenuItem1
+            // 
+            findAllToolStripMenuItem1.Name = "findAllToolStripMenuItem1";
+            findAllToolStripMenuItem1.Size = new Size(270, 34);
+            findAllToolStripMenuItem1.Text = "Find All";
             // 
             // Form1
             // 
@@ -240,5 +254,7 @@
         private ToolStripMenuItem randomObjectsToolStripMenuItem;
         private ToolStripMenuItem randomOperationsToolStripMenuItem;
         private DataGridView dataGridView1;
+        private ToolStripMenuItem findAllToolStripMenuItem1;
+        private ToolStripMenuItem findAllToolStripMenuItem;
     }
 }

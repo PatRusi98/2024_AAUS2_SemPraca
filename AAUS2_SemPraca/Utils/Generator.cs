@@ -36,11 +36,11 @@ namespace AAUS2_SemPraca.Utils
 
             if (property)
             {
-                result = new Property(number, description, gpss[0], gpss[1]);
+                result = new Property(number, description, gpss[0], gpss[1], GeoEntityType.Property);
             }
             else
             {
-                result = new Parcel(number, description, gpss[0], gpss[1]);
+                result = new Parcel(number, description, gpss[0], gpss[1], GeoEntityType.Parcel);
             }
 
             return result;

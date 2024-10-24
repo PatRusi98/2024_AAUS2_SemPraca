@@ -1,4 +1,5 @@
 ﻿using AAUS2_SemPraca.Utils;
+using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Objects
 {
@@ -10,6 +11,7 @@ namespace AAUS2_SemPraca.Objects
         public List<GeoEntity> SubAreas { get; set; } = new();
         public GPSLocation Point1 { get; set; }
         public GPSLocation Point2 { get; set; }
+        public GeoEntityType Type { get; set; }
         public double[] Key1
         {
             get
@@ -25,12 +27,13 @@ namespace AAUS2_SemPraca.Objects
             }
         }
 
-        public GeoEntity(int number, string description, GPSLocation point1, GPSLocation point2)
+        public GeoEntity(int number, string description, GPSLocation point1, GPSLocation point2, GeoEntityType type)
         {
             Number = number;
             Description = description;
             Point1 = point1;
             Point2 = point2;
+            Type = type;
 
             var value1 = Point1.GPSToDouble();
             var value2 = Point2.GPSToDouble();

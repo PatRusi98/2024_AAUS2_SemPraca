@@ -126,6 +126,18 @@ namespace AAUS2_SemPraca.Utils
             return result;
         }
 
+        public List<GeoEntity> SearchAll(GeoEntityType type = GeoEntityType.Unknown)
+        {
+
+
+            return new();
+        }
+
+        public void SaveToFile()
+        {
+            
+        }
+
         #region private
         private List<GeoEntity> SearchOverlapItems(GeoEntity entity)
         {

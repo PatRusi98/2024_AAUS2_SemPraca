@@ -108,7 +108,8 @@ namespace AAUS2_SemPraca
                                     number,
                                     description,
                                     gps1,
-                                    gps2
+                                    gps2,
+                                    GeoEntityType.Property
                                 );
 
             Handler.Insert(propertyToAdd);
@@ -140,7 +141,8 @@ namespace AAUS2_SemPraca
                                     number,
                                     description,
                                     gps1,
-                                    gps2
+                                    gps2,
+                                    GeoEntityType.Parcel
                                 );
 
             Handler.Insert(parcelToAdd);
