@@ -5,7 +5,8 @@ namespace AAUS2_SemPraca.Objects
 {
     public abstract class GeoEntity
     {
-        protected int ID { get; }
+        protected static long LastId = 0;
+        protected long ID { get; }
         public int Number { get; set; }
         public string? Description { get; set; }
         public List<GeoEntity> SubAreas { get; set; } = new();
@@ -42,11 +43,18 @@ namespace AAUS2_SemPraca.Objects
             {
                 (Point2, Point1) = (Point1, Point2);
             }
+
+            ID = generateId();
         }
 
         public void AddSubAreas(List<GeoEntity> entities)
         {
             entities.ForEach(x => SubAreas.Add(x));
+        }
+
+        protected static long generateId()                      // stack overflow kod: https://stackoverflow.com/questions/51641722/create-a-c-sharp-method-to-generate-auto-increment-id
+        {
+            return Interlocked.Increment(ref LastId);
         }
     }
 }
