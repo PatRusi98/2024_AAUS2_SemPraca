@@ -34,12 +34,18 @@ namespace AAUS2_SemPraca.Utils
                 (success, message) = TreeParcel.Insert(new GeoNode(parcel.Key1) { Value = parcel });
                 (success, message) = TreeParcel.Insert(new GeoNode(parcel.Key2) { Value = parcel });
 
+                (success, message) = TreeObjects.Insert(new GeoNode(parcel.Key1) { Value = parcel });
+                (success, message) = TreeObjects.Insert(new GeoNode(parcel.Key2) { Value = parcel });
+
                 parcel.AddSubAreas(SearchOverlapItems(parcel));
             }
             else if (entity is Property property)
             {
                 (success, message) = TreeProperty.Insert(new GeoNode(property.Key1) { Value = property });
                 (success, message) = TreeProperty.Insert(new GeoNode(property.Key2) { Value = property });
+
+                (success, message) = TreeObjects.Insert(new GeoNode(property.Key1) { Value = property });
+                (success, message) = TreeObjects.Insert(new GeoNode(property.Key2) { Value = property });
 
                 property.AddSubAreas(SearchOverlapItems(property));
             }
@@ -72,6 +78,7 @@ namespace AAUS2_SemPraca.Utils
                 entityToEdit.AddSubAreas(SearchOverlapItems(entityToEdit));
 
                 success = true;
+                // TODO: vymazat a znovu pridat do stromu
             }
 
             return success;
@@ -85,11 +92,17 @@ namespace AAUS2_SemPraca.Utils
             {
                 (success, message) = TreeParcel.Delete(new GeoNode(parcel.Key1) { Value = parcel });
                 (success, message) = TreeParcel.Delete(new GeoNode(parcel.Key2) { Value = parcel });
+
+                (success, message) = TreeObjects.Delete(new GeoNode(parcel.Key1) { Value = parcel });
+                (success, message) = TreeObjects.Delete(new GeoNode(parcel.Key2) { Value = parcel });
             }
             else if (entity is Property property)
             {
                 (success, message) = TreeProperty.Delete(new GeoNode(property.Key1) { Value = property });
                 (success, message) = TreeProperty.Delete(new GeoNode(property.Key2) { Value = property });
+
+                (success, message) = TreeObjects.Delete(new GeoNode(property.Key1) { Value = property });
+                (success, message) = TreeObjects.Delete(new GeoNode(property.Key2) { Value = property });
             }
 
             return success;
@@ -101,21 +114,11 @@ namespace AAUS2_SemPraca.Utils
             var result = new List<GeoEntity>();
 
             if (type == GeoEntityType.Parcel)
-            {
-                //najdi parcely
                 returnedNodes.AddRange(TreeParcel.Search(new GeoNode(gps.GPSToDouble()))!);
-            }
             else if (type == GeoEntityType.Property)
-            {
-                //najdi nehnutelnosti
                 returnedNodes.AddRange(TreeProperty.Search(new GeoNode(gps.GPSToDouble()))!);
-            }
             else
-            {
-                //najdi vsetko
-                returnedNodes.AddRange(TreeParcel.Search(new GeoNode(gps.GPSToDouble()))!);
-                returnedNodes.AddRange(TreeProperty.Search(new GeoNode(gps.GPSToDouble()))!);
-            }
+                returnedNodes.AddRange(TreeObjects.Search(new GeoNode(gps.GPSToDouble()))!);
 
             foreach (var node in returnedNodes)
             {
@@ -132,18 +135,11 @@ namespace AAUS2_SemPraca.Utils
             var result = new List<GeoEntity>();
 
             if (type == GeoEntityType.Parcel)
-            {
                 returnedNodes.AddRange(TreeParcel.GetAllItems()!);
-            }
             else if (type == GeoEntityType.Property)
-            {
                 returnedNodes.AddRange(TreeProperty.GetAllItems()!);
-            }
             else
-            {
-                returnedNodes.AddRange(TreeParcel.GetAllItems()!);
-                returnedNodes.AddRange(TreeProperty.GetAllItems()!);
-            }
+                returnedNodes.AddRange(TreeObjects.GetAllItems()!);
 
             foreach (var node in returnedNodes)
             {

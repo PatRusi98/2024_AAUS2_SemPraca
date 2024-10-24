@@ -26,7 +26,8 @@ namespace AAUS2_SemPraca
         {
             get
             {
-                _instance ??= new();
+                if (_instance == null)
+                    _instance = new();
 
                 return _instance;
             }
