@@ -128,9 +128,30 @@ namespace AAUS2_SemPraca.Utils
 
         public List<GeoEntity> SearchAll(GeoEntityType type = GeoEntityType.Unknown)
         {
+            var returnedNodes = new List<GeoNode>();
+            var result = new List<GeoEntity>();
 
+            if (type == GeoEntityType.Parcel)
+            {
+                returnedNodes.AddRange(TreeParcel.GetAllItems()!);
+            }
+            else if (type == GeoEntityType.Property)
+            {
+                returnedNodes.AddRange(TreeProperty.GetAllItems()!);
+            }
+            else
+            {
+                returnedNodes.AddRange(TreeParcel.GetAllItems()!);
+                returnedNodes.AddRange(TreeProperty.GetAllItems()!);
+            }
 
-            return new();
+            foreach (var node in returnedNodes)
+            {
+                if (node.Value != null)
+                    result.Add(node.Value);
+            }
+
+            return result;
         }
 
         public void SaveToFile()

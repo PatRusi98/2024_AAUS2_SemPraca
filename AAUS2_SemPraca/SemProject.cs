@@ -232,5 +232,29 @@ namespace AAUS2_SemPraca
                     Handler.Insert(parcel);
             }
         }
+
+        /*
+         * Vrati vsetky parcely
+         */
+        public List<GeoEntity> GetAllParcels()
+        {
+            return Handler.SearchAll(GeoEntityType.Parcel);
+        }
+
+        /*
+         * Vrati vsetky nehnutelnosti
+         */
+        public List<GeoEntity> GetAllProperties()
+        {
+            return Handler.SearchAll(GeoEntityType.Property);
+        }
+
+        /*
+         * Vrati vsetky objekty
+         */
+        public List<GeoEntity> GetAllEntities()
+        {
+            return Handler.SearchAll();
+        }
     }
 }

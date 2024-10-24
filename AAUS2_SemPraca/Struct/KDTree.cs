@@ -1,4 +1,5 @@
 ﻿using AAUS2_SemPraca.Utils;
+using System.Collections.Generic;
 using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Struct
@@ -43,10 +44,11 @@ namespace AAUS2_SemPraca.Struct
                             break;
                         }
                     }
+
                     if (isDuplicate)
                     {
                         currNode.Duplicates.Add(new(value));
-                        return (true, DebugCode.Success);
+                        return (true, DebugCode.StoredDuplicate);
                     }
                 }
 
@@ -74,7 +76,7 @@ namespace AAUS2_SemPraca.Struct
             return (true, DebugCode.Success);
         }
 
-        public List<T>? Search(T value)                                                               // bodove vyhladavanie na operacie s konkretymi prvkami
+        public List<T>? Search(T value)                                                         // bodove vyhladavanie na operacie s konkretymi prvkami
         {
             if (Root == null)                                                                   // ak neexistuje localRoot, strom je prazdny
                 return default;
@@ -82,7 +84,7 @@ namespace AAUS2_SemPraca.Struct
             if (value.GetKeys().Length != Dimensions)                                           // kontrola dimenzii kluca
                 throw new ArgumentException("Wrong key dimension!");
 
-            List<T>? found = new(); 
+            List<T>? found = new();
 
             KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny node na localRoot, kedze prehladavam od korena
             int depth = 0;
@@ -90,7 +92,19 @@ namespace AAUS2_SemPraca.Struct
             while (currNode != null)                                                            // pokial sa nedostaneme do listu (nema syna)
             {
                 if (currNode.Value.GetKeys().SequenceEqual(value.GetKeys()))                    // ak sa kluc zhoduje s hladanym klucom, vrat prvok
+                {
                     found.Add(currNode.Value);
+
+                    if (currNode.Duplicates.Count > 0)                                          // ak obsahuje duplikaty
+                    {
+                        foreach (var item in currNode.Duplicates)               
+                        {
+                            found.Add(item.Value);                                              // pridaj duplikaty do zoznamu najdenych
+                        }
+                    }
+
+                    return found;
+                }
 
                 int axis = depth % Dimensions;
 
@@ -103,6 +117,12 @@ namespace AAUS2_SemPraca.Struct
             }
 
             return found;
+        }
+
+        public List<T>? GetAllItems()
+        {
+            //TODO: inorder prehladanie celeho stromu 
+            return new();
         }
 
         public (bool, DebugCode) Delete(T value)
@@ -126,7 +146,7 @@ namespace AAUS2_SemPraca.Struct
                 parentNode = currNode;
                 int axis = depth % Dimensions;
 
-                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)      // porovnanie klucov v danej dimenzii
+                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)     // porovnanie klucov v danej dimenzii
                 {
                     currNode = currNode.LeftSon;
                     isLeft = true;
