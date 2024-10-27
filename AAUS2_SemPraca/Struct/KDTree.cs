@@ -1,5 +1,6 @@
 ﻿using AAUS2_SemPraca.Utils;
-using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Runtime.CompilerServices;
 using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Struct
@@ -15,7 +16,7 @@ namespace AAUS2_SemPraca.Struct
         {
             if (Root == null)                                                                   // ak neexistuje localRoot, vkladany prvok sa nim stane a dimenzia jeho kluca urci dimenziu stromu
             {
-                Root = new(value);
+                Root = new(value, 0);
                 Dimensions = value.GetKeys().Length;
                 return (true, DebugCode.Success);
             }
@@ -23,7 +24,7 @@ namespace AAUS2_SemPraca.Struct
             if (value.GetKeys().Length != Dimensions)                                           // kontrola dimenzii kluca
                 return (false, DebugCode.WrongKeyDimension);
 
-            KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny node na localRoot, kedze prehladavam od korena
+            KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny workingNode na localRoot, kedze prehladavam od korena
             KDTreeNode<T>? parentNode = null;
             bool isLeft = true;
             int depth = 0;
@@ -47,7 +48,7 @@ namespace AAUS2_SemPraca.Struct
 
                     if (isDuplicate)
                     {
-                        currNode.Duplicates.Add(new(value));
+                        currNode.Duplicates.Add(new(value, depth, currNode.Parent));
                         return (true, DebugCode.StoredDuplicate);
                     }
                 }
@@ -67,9 +68,9 @@ namespace AAUS2_SemPraca.Struct
             }
 
             if (isLeft && parentNode != null)
-                parentNode.LeftSon = new(value);
+                parentNode.LeftSon = new(value, depth, parentNode);
             else if (parentNode != null)
-                parentNode.RightSon = new(value);
+                parentNode.RightSon = new(value, depth, parentNode);
             else
                 return (false, DebugCode.NullParent);
 
@@ -86,12 +87,12 @@ namespace AAUS2_SemPraca.Struct
 
             List<T>? found = new();
 
-            KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny node na localRoot, kedze prehladavam od korena
+            KDTreeNode<T>? currNode = Root;                                                     // nastavim aktualny workingNode na localRoot, kedze prehladavam od korena
             int depth = 0;
 
             while (currNode != null)                                                            // pokial sa nedostaneme do listu (nema syna)
             {
-                if (currNode.Value.GetKeys().SequenceEqual(value.GetKeys()))                    // ak sa kluc zhoduje s hladanym klucom, vrat prvok
+                if (currNode.Value.GetKeys().SequenceEqual(value.GetKeys()))                    // ak sa kluc zhoduje s hladanym klucom, vloz prvok do listu
                 {
                     found.Add(currNode.Value);
 
@@ -119,10 +120,40 @@ namespace AAUS2_SemPraca.Struct
             return found;
         }
 
-        public List<T>? GetAllItems()
+        public List<T>? GetAllItems(KDTreeNode<T>? root = null, bool includeDuplicates = false)
         {
-            //TODO: inorder prehladanie celeho stromu 
-            return new();
+            List<T> items = new();
+            Stack<KDTreeNode<T>> stack = new();
+            KDTreeNode<T>? currNode = null;
+
+            if (root == null)
+                currNode = Root;
+            else
+                currNode = root;
+
+            while (currNode != null || stack.Count > 0)
+            {
+                while (currNode != null)                                                        // dostaneme sa co najviac dolava
+                {
+                    stack.Push(currNode);
+                    currNode = currNode.LeftSon;
+                }
+
+                currNode = stack.Pop();                                                         
+                items.Add(currNode.Value);
+
+                if (includeDuplicates)                                                          // pridame duplikaty
+                {
+                    foreach (var duplicate in currNode.Duplicates)
+                    {
+                        items.Add(duplicate.Value);
+                    }
+                }
+
+                currNode = currNode.RightSon;
+            }
+
+            return items;
         }
 
         public (bool, DebugCode) Delete(T value)
@@ -136,15 +167,35 @@ namespace AAUS2_SemPraca.Struct
             KDTreeNode<T>? currNode = Root;
             KDTreeNode<T>? parentNode = null;
             bool isLeft = true;
+            int axis = 0;
             int depth = 0;
 
             while (currNode != null)
             {
-                if (currNode.Value.Equals(value))                                               // ak sa kluc zhoduje s hladanym klucom, neprehladavame dalej
-                    break;
+                axis = depth % Dimensions;
+                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) == 0)         // ak sa kluce v danej dimenzii rovnaju
+                {
+                    var isDuplicateKey = true;
+                    for (int i = 0; i < Dimensions; i++)
+                    {
+                        if (value.GetKeys()[i].CompareKeys(currNode.Value.GetKeys()[i]) != 0)
+                        {
+                            isDuplicateKey = false;
+                            break;
+                        }
+                    }
+
+                    if (isDuplicateKey)
+                    {
+                        var (deleted, breaked) = HandleDuplicateDelete(currNode, value, isLeft);
+
+                        if (deleted) return (true, DebugCode.Success);
+                        if (breaked) break;
+                        if (!breaked && !deleted) return (false, DebugCode.Unknown);
+                    }
+                }
 
                 parentNode = currNode;
-                int axis = depth % Dimensions;
 
                 if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)     // porovnanie klucov v danej dimenzii
                 {
@@ -160,82 +211,276 @@ namespace AAUS2_SemPraca.Struct
                 depth++;
             }
 
-            //TODO
-            if (currNode == null)                                                               // ak sa prvok nenasiel, nemame co zmazat
-                return(false, DebugCode.Unknown);
-
-            if (currNode.LeftSon == null && currNode.RightSon == null)                          // ak je listom (nema synov)
+            if (currNode?.LeftSon == null && currNode?.RightSon == null)                          // ak je listom
             {
-                if (parentNode == null)                                                         // ak je mazany prvok localRoot
+                if (currNode == null)
                     Root = null;
-                else if (isLeft)                                                                // ak je mazany prvok lavy syn
-                    parentNode.LeftSon = null;
+                else if (isLeft)
+                    parentNode!.LeftSon = null;
                 else
-                    parentNode.RightSon = null;
+                    parentNode!.RightSon = null;
 
-                //TODO
-                return (false, DebugCode.Unknown);
+                return (true, DebugCode.Success);
+            }
+
+            Stack<KDTreeNode<T>> needsToBeReplaced = new();
+            needsToBeReplaced.Push(currNode);
+            var foundLeaf = false;
+
+            while (!foundLeaf)
+            {
+                KDTreeNode<T> workingNode = needsToBeReplaced.Peek();
+                KDTreeNode<T>? nextWorkingNode = null;
+
+                if (workingNode.LeftSon != null)
+                    nextWorkingNode = GetMaxInorder(workingNode.LeftSon, workingNode.Depth);
+
+                if (workingNode.RightSon != null && nextWorkingNode == null)
+                    nextWorkingNode = GetMinInorder(workingNode.RightSon, workingNode.Depth);
+
+                needsToBeReplaced.Push(nextWorkingNode!);
+
+                if (nextWorkingNode?.LeftSon == null && nextWorkingNode?.RightSon == null)
+                    foundLeaf = true;
+            }
+
+            var leaf = needsToBeReplaced.Pop();
+
+            while (needsToBeReplaced.Count > 0)
+            {
+                var replacedByLeaf = needsToBeReplaced.Pop();
+                HandleReplacing(replacedByLeaf, leaf);
+
+                leaf = replacedByLeaf;
+            }
+            
+            return (true, DebugCode.Success);
+        }
+
+        public (bool, DebugCode) DeleteAlternate(T value)
+        {
+            if (Root == null)                                                                   // ak je strom prazdny
+                return (false, DebugCode.EmptyTree);
+
+            if (value.GetKeys().Length != Dimensions)                                           // kontrola dimenzii kluca
+                return (false, DebugCode.WrongKeyDimension);
+
+            KDTreeNode<T>? currNode = Root;
+            KDTreeNode<T>? parentNode = null;
+            bool isLeft = true;
+            int axis = 0;
+            int depth = 0;
+
+            while (currNode != null)
+            {
+                axis = depth % Dimensions;
+                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) == 0)         // ak sa kluce v danej dimenzii rovnaju
+                {
+                    var isDuplicateKey = true;
+                    for (int i = 0; i < Dimensions; i++)
+                    {
+                        if (value.GetKeys()[i].CompareKeys(currNode.Value.GetKeys()[i]) != 0)
+                        {
+                            isDuplicateKey = false;
+                            break;
+                        }
+                    }
+
+                    if (isDuplicateKey)
+                    {
+                        var (deleted, breaked) = HandleDuplicateDelete(currNode, value, isLeft);
+
+                        if (deleted) return (true, DebugCode.Success);
+                        if (breaked) break;
+                        if (!breaked && !deleted) return (false, DebugCode.Unknown);
+                    }
+                }
+
+                parentNode = currNode;
+
+                if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)     // porovnanie klucov v danej dimenzii
+                {
+                    currNode = currNode.LeftSon;
+                    isLeft = true;
+                }
+                else
+                {
+                    currNode = currNode.RightSon;
+                    isLeft = false;
+                }
+
+                depth++;
+            }
+
+            if (currNode?.LeftSon == null && currNode?.RightSon == null)                          // ak je listom
+            {
+                if (currNode == null)
+                    Root = null;
+                else if (isLeft)
+                    parentNode!.LeftSon = null;
+                else
+                    parentNode!.RightSon = null;
+
+                return (true, DebugCode.Success);
+            }
+
+            List<T> itemsUnderDeleted = new();
+
+            if (currNode?.LeftSon != null)
+            {
+                itemsUnderDeleted = GetAllItems(currNode.LeftSon, true);
+            }
+            else
+            {
+                itemsUnderDeleted = GetAllItems(currNode?.RightSon, true);
             }
 
             return (false, DebugCode.Unknown);
-        }
+        }// nedokoncene
 
         #region private
-        private (KDTreeNode<T>, bool) GetMinimum(KDTreeNode<T> localRoot, int localRootDepth, int keyPosition)
+        private KDTreeNode<T> GetMaxInorder(KDTreeNode<T> localRoot, int parentDepth)
         {
-            KDTreeNode<T>? min = null;
-            KDTreeNode<T>? currNode = localRoot;
-            int depth = localRootDepth;
-            var isLeaf = false;
+            Stack<KDTreeNode<T>> stack = new();
+            KDTreeNode<T> currNode = localRoot;
+            KDTreeNode<T> max = currNode;
+            var keyPosition = parentDepth % Dimensions;
 
-            while (currNode != null)
+            while (currNode != null || stack.Count > 0)
             {
-                if(min == null)
-                    min = currNode;
-
-                if (currNode.LeftSon == null && currNode.RightSon == null)                                              // ak sme sa dostali do listu
+                while (currNode != null)
                 {
-                    if (currNode.Value.GetKeys()[keyPosition].CompareKeys(min.Value.GetKeys()[keyPosition]) <= 0)       // ak je kluc na hladanej pozicii mensi alebo rovny ako min
-                        min = currNode;                                                                                 // nastav aktualny ako minimum
+                    if (max == null)
+                        max = currNode;
+                    else if (currNode.Value.GetKeys()[keyPosition].CompareKeys(max.Value.GetKeys()[keyPosition]) >= 0)
+                        max = currNode;
 
-                    isLeaf = true;
-                    return (min, isLeaf);
+                    stack.Push(currNode);
+                    currNode = currNode.LeftSon!;
                 }
 
-                int axis = depth % Dimensions;
-                var hasLeft = currNode.LeftSon != null;
-                var hasRight = currNode.RightSon != null;
-                var hasBoth = (hasLeft && hasRight);
+                currNode = stack.Pop();
 
-                if (depth == keyPosition)
-                {
-                    min = currNode.LeftSon;
-                    currNode = currNode.LeftSon;
-                }
-                else
-                {
-                    
-                }
-                
+                if (max == null)
+                    max = currNode;
+                else if (currNode.Value.GetKeys()[keyPosition].CompareKeys(max.Value.GetKeys()[keyPosition]) >= 0)
+                    max = currNode;
+
+                currNode = currNode.RightSon!;
             }
 
-            return (min!, isLeaf);
+            return max;
         }
 
-        private (KDTreeNode<T>, bool) GetMaximum(KDTreeNode<T> localRoot, int keyPosition)
+        private KDTreeNode<T> GetMinInorder(KDTreeNode<T> localRoot, int parentDepth)
         {
-            KDTreeNode<T>? max = null;
-            KDTreeNode<T>? currNode = localRoot;
-            int depth = keyPosition;
-            var isLeaf = false;
+            Stack<KDTreeNode<T>> stack = new();
+            KDTreeNode<T> currNode = localRoot;
+            KDTreeNode<T> min = currNode;
+            var keyPosition = parentDepth % Dimensions;
 
-            while (currNode != null)
+            while (currNode != null || stack.Count > 0)
             {
-                if(max == null)
-                    max = currNode;
+                while (currNode != null)
+                {
+                    if (currNode.Value.GetKeys()[keyPosition].CompareKeys(min.Value.GetKeys()[keyPosition]) <= 0)
+                        min = currNode;
+
+                    stack.Push(currNode);
+                    currNode = currNode.LeftSon!;
+                }
+
+                currNode = stack.Pop();
+
+                currNode = currNode.RightSon!;
             }
 
-            return(max!, isLeaf);
+            return min;
+        }
+
+        private (bool, bool) HandleDuplicateDelete(KDTreeNode<T> currNode, T value, bool isLeft)
+        {
+            if (currNode.Duplicates.Count > 0)                                              // kontrola duplikatov
+            {
+                if (currNode.Value.Equals(value))                                           // ak sa kluc zhoduje s hlavnym workingNode, vyberieme prvy duplikat a nahradime ho nim
+                {
+                    var newHeadNode = currNode.Duplicates[0];
+                    newHeadNode.LeftSon = currNode.LeftSon;
+                    newHeadNode.RightSon = currNode.RightSon;
+                    newHeadNode.Duplicates = currNode.Duplicates;
+                    newHeadNode.Duplicates.RemoveAt(0);
+
+                    if (currNode.Parent == null)
+                        Root = newHeadNode;
+                    else if (isLeft)
+                        currNode.Parent.LeftSon = newHeadNode;
+                    else
+                        currNode.Parent.RightSon = newHeadNode;
+
+                    currNode = null;                                                        // zmazeme povodny workingNode
+
+                    return (true, false);
+                }
+
+                foreach (var item in currNode.Duplicates)
+                {
+                    if (item.Value.Equals(value))                                       // ak v liste duplikatov najdeme hladany prvok, zmazeme ho z neho
+                    {
+                        currNode.Duplicates.Remove(item);
+                        return (true, false);
+                    }
+                }
+
+                return (false, false);
+            }
+            else if (currNode.Value.Equals(value))                                      // ak nema duplikaty a rovna sa, vyskocime z while a pokracujeme
+            {
+                return (false, true);
+            }
+            else
+            {
+                return (false, false);
+            }
+        }
+
+        private void HandleReplacing(KDTreeNode<T> oldNode, KDTreeNode<T> newNode)
+        {
+            if (newNode.Parent != null)                                                 // odstranenie syna z parenta
+            {
+                if (newNode.Parent.LeftSon == newNode)
+                    newNode.Parent.LeftSon = null;
+                else
+                    newNode.Parent.RightSon = null;
+            }
+
+            newNode.Parent = oldNode.Parent;
+            newNode.LeftSon = oldNode.LeftSon;                                           
+            newNode.RightSon = oldNode.RightSon;
+            newNode.Depth = oldNode.Depth;
+
+            if (oldNode.Parent != null)
+            {
+                if (oldNode.Parent.LeftSon == oldNode)
+                    oldNode.Parent.LeftSon = newNode;
+                else
+                    oldNode.Parent.RightSon = newNode;
+            }
+            else
+            {
+                Root = newNode;
+            }
+
+            if (oldNode.LeftSon != null)                                            // odlinkovanie synov a priradenie noveho parenta
+            {
+                oldNode.LeftSon.Parent = newNode;
+                oldNode.LeftSon = null;
+            }
+
+            if (oldNode.RightSon != null)
+            {
+                oldNode.RightSon.Parent = newNode;
+                oldNode.RightSon = null;
+            }
         }
         #endregion
     }

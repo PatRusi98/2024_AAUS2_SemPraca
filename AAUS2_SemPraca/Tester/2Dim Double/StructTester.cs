@@ -41,6 +41,24 @@ namespace AAUS2_SemPraca.Tester
             return inserted;
         }
 
+        public List<TestEntity> Insert(List<double[]> values)
+        {
+            var inserted = new List<TestEntity>();
+
+            for (int i = 0; i < values.Count; i++)
+            {
+                var numbers = values[i];
+
+                var testValue1 = numbers[0];
+                var testValue2 = numbers[1];
+
+                TestTree.Insert(new TestEntity(testValue1, testValue2));
+                inserted.Add(new TestEntity(testValue1, testValue2));
+            }
+
+            return inserted;
+        }
+
         public bool TestSearch(List<TestEntity> entities, int numberOfIterations = 0)
         {
             if (entities.Count < 1)
@@ -73,18 +91,20 @@ namespace AAUS2_SemPraca.Tester
 
             for (int i = 0; i < numberOfIterations; i++)
             {
-                var entityToDelete = internalList[_random.Next(internalList.Count)];
+                //var entityToDelete = internalList[_random.Next(internalList.Count)];
+                var entityToDelete = internalList[0];
                 TestTree.Delete(entityToDelete);
                 internalList.Remove(entityToDelete);
 
-                if (TestTree.Search(entityToDelete) != null)
+                var (succ, message) = TestTree.Delete(entityToDelete);
+                if (!succ)
                     return false;
             }
 
             return true;
         }
 
-        public bool CreateTestCase(int numberOfIterations, int insertProb, int searchProb, int deleteProb)
+        public bool CreateTestCase(int numberOfIterations, double insertProb, double searchProb, double deleteProb)
         {
             ClearTree();
 
@@ -104,7 +124,7 @@ namespace AAUS2_SemPraca.Tester
                     case var expression when operation < insert:
                         searched.Add(TestInsert(1)[0]);
                         break;
-                    case var expression when operation < search:
+                    case var expression when operation < insert + search:
                         ok = TestSearch(searched, 1);
                         if (!ok)
                             return false;

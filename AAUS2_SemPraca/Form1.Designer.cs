@@ -28,233 +28,308 @@
         /// </summary>
         private void InitializeComponent()
         {
-            menuStrip1 = new MenuStrip();
+            Menu = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
-            newToolStripMenuItem = new ToolStripMenuItem();
-            loadFromFileToolStripMenuItem = new ToolStripMenuItem();
-            saveToFileToolStripMenuItem = new ToolStripMenuItem();
-            exitToolStripMenuItem = new ToolStripMenuItem();
+            NewProject = new ToolStripMenuItem();
+            LoadFromFile = new ToolStripMenuItem();
+            SaveToFile = new ToolStripMenuItem();
+            Exit = new ToolStripMenuItem();
             parcelToolStripMenuItem = new ToolStripMenuItem();
-            insertToolStripMenuItem = new ToolStripMenuItem();
-            searchToolStripMenuItem = new ToolStripMenuItem();
+            InsertParcel = new ToolStripMenuItem();
+            SearchParcel = new ToolStripMenuItem();
+            FindAllParcels = new ToolStripMenuItem();
             propertyToolStripMenuItem = new ToolStripMenuItem();
-            insertToolStripMenuItem1 = new ToolStripMenuItem();
-            searchToolStripMenuItem1 = new ToolStripMenuItem();
+            InsertProperty = new ToolStripMenuItem();
+            SearchProperty = new ToolStripMenuItem();
+            FindAllProperties = new ToolStripMenuItem();
+            allObjectsToolStripMenuItem1 = new ToolStripMenuItem();
             allObjectsToolStripMenuItem = new ToolStripMenuItem();
-            findByPointToolStripMenuItem = new ToolStripMenuItem();
-            findAllObjectsToolStripMenuItem = new ToolStripMenuItem();
+            FindObjectByPoint = new ToolStripMenuItem();
+            FindAllObjects = new ToolStripMenuItem();
             generatorToolStripMenuItem = new ToolStripMenuItem();
             generateToolStripMenuItem = new ToolStripMenuItem();
-            parcelsToolStripMenuItem = new ToolStripMenuItem();
-            propertiesToolStripMenuItem = new ToolStripMenuItem();
-            randomObjectsToolStripMenuItem = new ToolStripMenuItem();
-            randomOperationsToolStripMenuItem = new ToolStripMenuItem();
-            dataGridView1 = new DataGridView();
-            findAllToolStripMenuItem = new ToolStripMenuItem();
-            findAllToolStripMenuItem1 = new ToolStripMenuItem();
-            menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            GenerateParcels = new ToolStripMenuItem();
+            GenerateProperties = new ToolStripMenuItem();
+            GenerateRandomObjects = new ToolStripMenuItem();
+            RandomOperations = new ToolStripMenuItem();
+            DataGrid = new DataGridView();
+            TypeColumn = new DataGridViewTextBoxColumn();
+            NumberColumn = new DataGridViewTextBoxColumn();
+            DescriptionColumn = new DataGridViewTextBoxColumn();
+            GPS1Column = new DataGridViewTextBoxColumn();
+            GPS2Column = new DataGridViewTextBoxColumn();
+            ActionsColumn = new DataGridViewComboBoxColumn();
+            Menu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DataGrid).BeginInit();
             SuspendLayout();
             // 
-            // menuStrip1
+            // Menu
             // 
-            menuStrip1.ImageScalingSize = new Size(24, 24);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, parcelToolStripMenuItem, propertyToolStripMenuItem, allObjectsToolStripMenuItem, generatorToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1981, 33);
-            menuStrip1.TabIndex = 0;
-            menuStrip1.Text = "menuStrip1";
+            Menu.ImageScalingSize = new Size(24, 24);
+            Menu.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, parcelToolStripMenuItem, propertyToolStripMenuItem, allObjectsToolStripMenuItem, generatorToolStripMenuItem });
+            Menu.Location = new Point(0, 0);
+            Menu.Name = "Menu";
+            Menu.Padding = new Padding(4, 1, 0, 1);
+            Menu.Size = new Size(1584, 24);
+            Menu.TabIndex = 0;
+            Menu.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newToolStripMenuItem, loadFromFileToolStripMenuItem, saveToFileToolStripMenuItem, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NewProject, LoadFromFile, SaveToFile, Exit });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(54, 29);
+            fileToolStripMenuItem.Size = new Size(37, 22);
             fileToolStripMenuItem.Text = "File";
             // 
-            // newToolStripMenuItem
+            // NewProject
             // 
-            newToolStripMenuItem.Name = "newToolStripMenuItem";
-            newToolStripMenuItem.Size = new Size(270, 34);
-            newToolStripMenuItem.Text = "New";
+            NewProject.Name = "NewProject";
+            NewProject.Size = new Size(157, 22);
+            NewProject.Text = "New project";
+            NewProject.Click += NewProject_Click;
             // 
-            // loadFromFileToolStripMenuItem
+            // LoadFromFile
             // 
-            loadFromFileToolStripMenuItem.Name = "loadFromFileToolStripMenuItem";
-            loadFromFileToolStripMenuItem.Size = new Size(270, 34);
-            loadFromFileToolStripMenuItem.Text = "Load from file...";
+            LoadFromFile.Name = "LoadFromFile";
+            LoadFromFile.Size = new Size(157, 22);
+            LoadFromFile.Text = "Load from file...";
             // 
-            // saveToFileToolStripMenuItem
+            // SaveToFile
             // 
-            saveToFileToolStripMenuItem.Name = "saveToFileToolStripMenuItem";
-            saveToFileToolStripMenuItem.Size = new Size(270, 34);
-            saveToFileToolStripMenuItem.Text = "Save to file...";
+            SaveToFile.Name = "SaveToFile";
+            SaveToFile.Size = new Size(157, 22);
+            SaveToFile.Text = "Save to file...";
             // 
-            // exitToolStripMenuItem
+            // Exit
             // 
-            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(270, 34);
-            exitToolStripMenuItem.Text = "Exit";
+            Exit.Name = "Exit";
+            Exit.Size = new Size(157, 22);
+            Exit.Text = "Exit";
+            Exit.Click += Exit_Click;
             // 
             // parcelToolStripMenuItem
             // 
-            parcelToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { insertToolStripMenuItem, searchToolStripMenuItem, findAllToolStripMenuItem1 });
+            parcelToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { InsertParcel, SearchParcel, FindAllParcels });
             parcelToolStripMenuItem.Name = "parcelToolStripMenuItem";
-            parcelToolStripMenuItem.Size = new Size(73, 29);
+            parcelToolStripMenuItem.Size = new Size(51, 22);
             parcelToolStripMenuItem.Text = "Parcel";
             // 
-            // insertToolStripMenuItem
+            // InsertParcel
             // 
-            insertToolStripMenuItem.Name = "insertToolStripMenuItem";
-            insertToolStripMenuItem.Size = new Size(270, 34);
-            insertToolStripMenuItem.Text = "Insert";
+            InsertParcel.Name = "InsertParcel";
+            InsertParcel.Size = new Size(114, 22);
+            InsertParcel.Text = "Insert";
             // 
-            // searchToolStripMenuItem
+            // SearchParcel
             // 
-            searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            searchToolStripMenuItem.Size = new Size(270, 34);
-            searchToolStripMenuItem.Text = "Search";
+            SearchParcel.Name = "SearchParcel";
+            SearchParcel.Size = new Size(114, 22);
+            SearchParcel.Text = "Search";
+            // 
+            // FindAllParcels
+            // 
+            FindAllParcels.Name = "FindAllParcels";
+            FindAllParcels.Size = new Size(114, 22);
+            FindAllParcels.Text = "Find All";
+            FindAllParcels.Click += FindAllParcels_Click;
             // 
             // propertyToolStripMenuItem
             // 
-            propertyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { insertToolStripMenuItem1, searchToolStripMenuItem1, findAllToolStripMenuItem });
+            propertyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { InsertProperty, SearchProperty, FindAllProperties, allObjectsToolStripMenuItem1 });
             propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
-            propertyToolStripMenuItem.Size = new Size(96, 29);
+            propertyToolStripMenuItem.Size = new Size(64, 22);
             propertyToolStripMenuItem.Text = "Property";
             // 
-            // insertToolStripMenuItem1
+            // InsertProperty
             // 
-            insertToolStripMenuItem1.Name = "insertToolStripMenuItem1";
-            insertToolStripMenuItem1.Size = new Size(270, 34);
-            insertToolStripMenuItem1.Text = "Insert";
+            InsertProperty.Name = "InsertProperty";
+            InsertProperty.Size = new Size(131, 22);
+            InsertProperty.Text = "Insert";
             // 
-            // searchToolStripMenuItem1
+            // SearchProperty
             // 
-            searchToolStripMenuItem1.Name = "searchToolStripMenuItem1";
-            searchToolStripMenuItem1.Size = new Size(270, 34);
-            searchToolStripMenuItem1.Text = "Search";
+            SearchProperty.Name = "SearchProperty";
+            SearchProperty.Size = new Size(131, 22);
+            SearchProperty.Text = "Search";
+            // 
+            // FindAllProperties
+            // 
+            FindAllProperties.Name = "FindAllProperties";
+            FindAllProperties.Size = new Size(131, 22);
+            FindAllProperties.Text = "Find All";
+            FindAllProperties.Click += FindAllProperties_Click;
+            // 
+            // allObjectsToolStripMenuItem1
+            // 
+            allObjectsToolStripMenuItem1.Name = "allObjectsToolStripMenuItem1";
+            allObjectsToolStripMenuItem1.Size = new Size(180, 22);
+            allObjectsToolStripMenuItem1.Text = "All Objects";
+            allObjectsToolStripMenuItem1.Click += allObjectsToolStripMenuItem1_Click;
             // 
             // allObjectsToolStripMenuItem
             // 
-            allObjectsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { findByPointToolStripMenuItem, findAllObjectsToolStripMenuItem });
+            allObjectsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { FindObjectByPoint, FindAllObjects });
             allObjectsToolStripMenuItem.Name = "allObjectsToolStripMenuItem";
-            allObjectsToolStripMenuItem.Size = new Size(113, 29);
+            allObjectsToolStripMenuItem.Size = new Size(76, 22);
             allObjectsToolStripMenuItem.Text = "All Objects";
             // 
-            // findByPointToolStripMenuItem
+            // FindObjectByPoint
             // 
-            findByPointToolStripMenuItem.Name = "findByPointToolStripMenuItem";
-            findByPointToolStripMenuItem.Size = new Size(270, 34);
-            findByPointToolStripMenuItem.Text = "Find by point";
+            FindObjectByPoint.AutoSize = false;
+            FindObjectByPoint.ImageScaling = ToolStripItemImageScaling.None;
+            FindObjectByPoint.Name = "FindObjectByPoint";
+            FindObjectByPoint.Size = new Size(180, 22);
+            FindObjectByPoint.Text = "Find by point";
+            FindObjectByPoint.Click += FindObjectByPoint_Click;
             // 
-            // findAllObjectsToolStripMenuItem
+            // FindAllObjects
             // 
-            findAllObjectsToolStripMenuItem.Name = "findAllObjectsToolStripMenuItem";
-            findAllObjectsToolStripMenuItem.Size = new Size(270, 34);
-            findAllObjectsToolStripMenuItem.Text = "Find all objects";
+            FindAllObjects.Name = "FindAllObjects";
+            FindAllObjects.Size = new Size(153, 22);
+            FindAllObjects.Text = "Find all objects";
+            FindAllObjects.Click += FindAllObjects_Click;
             // 
             // generatorToolStripMenuItem
             // 
-            generatorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { generateToolStripMenuItem, randomOperationsToolStripMenuItem });
+            generatorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { generateToolStripMenuItem, RandomOperations });
             generatorToolStripMenuItem.Name = "generatorToolStripMenuItem";
-            generatorToolStripMenuItem.Size = new Size(106, 29);
+            generatorToolStripMenuItem.Size = new Size(71, 22);
             generatorToolStripMenuItem.Text = "Generator";
             // 
             // generateToolStripMenuItem
             // 
-            generateToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { parcelsToolStripMenuItem, propertiesToolStripMenuItem, randomObjectsToolStripMenuItem });
+            generateToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { GenerateParcels, GenerateProperties, GenerateRandomObjects });
             generateToolStripMenuItem.Name = "generateToolStripMenuItem";
-            generateToolStripMenuItem.Size = new Size(272, 34);
+            generateToolStripMenuItem.Size = new Size(178, 22);
             generateToolStripMenuItem.Text = "Generate...";
             // 
-            // parcelsToolStripMenuItem
+            // GenerateParcels
             // 
-            parcelsToolStripMenuItem.Name = "parcelsToolStripMenuItem";
-            parcelsToolStripMenuItem.Size = new Size(270, 34);
-            parcelsToolStripMenuItem.Text = "Parcels";
+            GenerateParcels.Name = "GenerateParcels";
+            GenerateParcels.Size = new Size(160, 22);
+            GenerateParcels.Text = "Parcels";
             // 
-            // propertiesToolStripMenuItem
+            // GenerateProperties
             // 
-            propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            propertiesToolStripMenuItem.Size = new Size(270, 34);
-            propertiesToolStripMenuItem.Text = "Properties";
+            GenerateProperties.Name = "GenerateProperties";
+            GenerateProperties.Size = new Size(160, 22);
+            GenerateProperties.Text = "Properties";
             // 
-            // randomObjectsToolStripMenuItem
+            // GenerateRandomObjects
             // 
-            randomObjectsToolStripMenuItem.Name = "randomObjectsToolStripMenuItem";
-            randomObjectsToolStripMenuItem.Size = new Size(270, 34);
-            randomObjectsToolStripMenuItem.Text = "Random objects";
+            GenerateRandomObjects.Name = "GenerateRandomObjects";
+            GenerateRandomObjects.Size = new Size(160, 22);
+            GenerateRandomObjects.Text = "Random objects";
             // 
-            // randomOperationsToolStripMenuItem
+            // RandomOperations
             // 
-            randomOperationsToolStripMenuItem.Name = "randomOperationsToolStripMenuItem";
-            randomOperationsToolStripMenuItem.Size = new Size(272, 34);
-            randomOperationsToolStripMenuItem.Text = "Random operations";
+            RandomOperations.Name = "RandomOperations";
+            RandomOperations.Size = new Size(178, 22);
+            RandomOperations.Text = "Random operations";
             // 
-            // dataGridView1
+            // DataGrid
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(12, 36);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 62;
-            dataGridView1.Size = new Size(1957, 876);
-            dataGridView1.TabIndex = 1;
+            DataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            DataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            DataGrid.Columns.AddRange(new DataGridViewColumn[] { TypeColumn, NumberColumn, DescriptionColumn, GPS1Column, GPS2Column, ActionsColumn });
+            DataGrid.Location = new Point(8, 22);
+            DataGrid.Margin = new Padding(2);
+            DataGrid.MaximumSize = new Size(1565, 828);
+            DataGrid.MinimumSize = new Size(1565, 828);
+            DataGrid.Name = "DataGrid";
+            DataGrid.RowHeadersWidth = 62;
+            DataGrid.Size = new Size(1565, 828);
+            DataGrid.TabIndex = 1;
             // 
-            // findAllToolStripMenuItem
+            // TypeColumn
             // 
-            findAllToolStripMenuItem.Name = "findAllToolStripMenuItem";
-            findAllToolStripMenuItem.Size = new Size(270, 34);
-            findAllToolStripMenuItem.Text = "Find All";
+            TypeColumn.HeaderText = "Type";
+            TypeColumn.Name = "TypeColumn";
+            TypeColumn.ReadOnly = true;
             // 
-            // findAllToolStripMenuItem1
+            // NumberColumn
             // 
-            findAllToolStripMenuItem1.Name = "findAllToolStripMenuItem1";
-            findAllToolStripMenuItem1.Size = new Size(270, 34);
-            findAllToolStripMenuItem1.Text = "Find All";
+            NumberColumn.HeaderText = "Number";
+            NumberColumn.Name = "NumberColumn";
+            NumberColumn.ReadOnly = true;
+            // 
+            // DescriptionColumn
+            // 
+            DescriptionColumn.HeaderText = "Description";
+            DescriptionColumn.Name = "DescriptionColumn";
+            DescriptionColumn.ReadOnly = true;
+            // 
+            // GPS1Column
+            // 
+            GPS1Column.HeaderText = "GPS LL";
+            GPS1Column.Name = "GPS1Column";
+            GPS1Column.ReadOnly = true;
+            // 
+            // GPS2Column
+            // 
+            GPS2Column.HeaderText = "GPS UR";
+            GPS2Column.Name = "GPS2Column";
+            GPS2Column.ReadOnly = true;
+            // 
+            // ActionsColumn
+            // 
+            ActionsColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            ActionsColumn.HeaderText = "Actions";
+            ActionsColumn.Name = "ActionsColumn";
+            ActionsColumn.Width = 53;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1981, 950);
-            Controls.Add(dataGridView1);
-            Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
+            ClientSize = new Size(1584, 861);
+            Controls.Add(DataGrid);
+            Controls.Add(Menu);
+            MainMenuStrip = Menu;
+            Margin = new Padding(2);
+            MaximumSize = new Size(1600, 900);
+            MinimumSize = new Size(1600, 900);
             Name = "Form1";
             Text = "AAUS2 SemPraca";
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            Menu.ResumeLayout(false);
+            Menu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)DataGrid).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private MenuStrip menuStrip1;
+        private DataGridView DataGrid;
+        private MenuStrip Menu;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem parcelToolStripMenuItem;
         private ToolStripMenuItem propertyToolStripMenuItem;
-        private ToolStripMenuItem newToolStripMenuItem;
-        private ToolStripMenuItem loadFromFileToolStripMenuItem;
-        private ToolStripMenuItem saveToFileToolStripMenuItem;
-        private ToolStripMenuItem exitToolStripMenuItem;
-        private ToolStripMenuItem insertToolStripMenuItem;
-        private ToolStripMenuItem searchToolStripMenuItem;
-        private ToolStripMenuItem insertToolStripMenuItem1;
-        private ToolStripMenuItem searchToolStripMenuItem1;
+        private ToolStripMenuItem NewProject;
+        private ToolStripMenuItem LoadFromFile;
+        private ToolStripMenuItem SaveToFile;
+        private ToolStripMenuItem Exit;
+        private ToolStripMenuItem InsertParcel;
+        private ToolStripMenuItem SearchParcel;
+        private ToolStripMenuItem InsertProperty;
+        private ToolStripMenuItem SearchProperty;
         private ToolStripMenuItem allObjectsToolStripMenuItem;
-        private ToolStripMenuItem findByPointToolStripMenuItem;
-        private ToolStripMenuItem findAllObjectsToolStripMenuItem;
+        private ToolStripMenuItem FindObjectByPoint;
+        private ToolStripMenuItem FindAllObjects;
         private ToolStripMenuItem generatorToolStripMenuItem;
         private ToolStripMenuItem generateToolStripMenuItem;
-        private ToolStripMenuItem parcelsToolStripMenuItem;
-        private ToolStripMenuItem propertiesToolStripMenuItem;
-        private ToolStripMenuItem randomObjectsToolStripMenuItem;
-        private ToolStripMenuItem randomOperationsToolStripMenuItem;
-        private DataGridView dataGridView1;
-        private ToolStripMenuItem findAllToolStripMenuItem1;
-        private ToolStripMenuItem findAllToolStripMenuItem;
+        private ToolStripMenuItem GenerateParcels;
+        private ToolStripMenuItem GenerateProperties;
+        private ToolStripMenuItem GenerateRandomObjects;
+        private ToolStripMenuItem RandomOperations;
+        private ToolStripMenuItem FindAllParcels;
+        private ToolStripMenuItem FindAllProperties;
+        private ToolStripMenuItem allObjectsToolStripMenuItem1;
+        private DataGridViewTextBoxColumn TypeColumn;
+        private DataGridViewTextBoxColumn NumberColumn;
+        private DataGridViewTextBoxColumn DescriptionColumn;
+        private DataGridViewTextBoxColumn GPS1Column;
+        private DataGridViewTextBoxColumn GPS2Column;
+        private DataGridViewComboBoxColumn ActionsColumn;
     }
 }

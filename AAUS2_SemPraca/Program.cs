@@ -28,11 +28,22 @@ namespace AAUS2_SemPraca
 
             // tester
             StructTester tester = StructTester.Instance;
-            //var inserted = tester.TestInsert(100000);
-            //var search = tester.TestSearch(inserted);
-            var success = tester.CreateTestCase(100000, 70, 30, 0);
+            //var success = tester.CreateTestCase(100000, 70.00, 30.00, 0.00);
+            //StructTester4Dim tester = StructTester4Dim.Instance;
+            //var success = tester.CreateTestCase(10000, 100.00, 0.00, 0.00);
+            List<double[]> valuesToAdd = new List<double[]>();
+            valuesToAdd.Add(new double[] { 4.0, 1.0 });
+            valuesToAdd.Add(new double[] { 7.0, 5.0 });
+            valuesToAdd.Add(new double[] { 7.0, 2.0 });
+            valuesToAdd.Add(new double[] { 7.0, 9.0 });
+            valuesToAdd.Add(new double[] { 7.0, 6.0 });
+            valuesToAdd.Add(new double[] { 8.0, 7.0 });
 
-            Console.WriteLine("success");
+            var inserted = tester.Insert(valuesToAdd);
+            //tester.TestSearch(inserted);
+            var success = tester.TestDelete(inserted);
+
+            Console.WriteLine("hod mi sem brejkac prosim");
         }
     }
 }
