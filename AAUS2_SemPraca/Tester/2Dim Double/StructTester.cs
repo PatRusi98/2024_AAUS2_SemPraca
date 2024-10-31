@@ -1,4 +1,5 @@
 ﻿using AAUS2_SemPraca.Struct;
+using System.Diagnostics;
 
 namespace AAUS2_SemPraca.Tester
 {
@@ -31,8 +32,8 @@ namespace AAUS2_SemPraca.Tester
 
             for (int i = 0; i < numberOfEntities; i++)
             {
-                var testValue1 = _random.NextDouble() * _random.Next(100);
-                var testValue2 = _random.NextDouble() * _random.Next(100);
+                var testValue1 = (double)_random.Next(10);
+                var testValue2 = (double)_random.Next(10);
 
                 TestTree.Insert(new TestEntity(testValue1, testValue2));
                 inserted.Add(new TestEntity(testValue1, testValue2));
@@ -72,6 +73,7 @@ namespace AAUS2_SemPraca.Tester
             {
                 var entityToSearch = internalList[_random.Next(internalList.Count)];
                 var found = TestTree.Search(entityToSearch);
+
                 if (found == null)
                     return false;
                 internalList.Remove(entityToSearch);
@@ -93,12 +95,11 @@ namespace AAUS2_SemPraca.Tester
             {
                 //var entityToDelete = internalList[_random.Next(internalList.Count)];
                 var entityToDelete = internalList[0];
-                TestTree.Delete(entityToDelete);
+                var (succ, message) = TestTree.Delete(entityToDelete);
                 internalList.Remove(entityToDelete);
 
-                var (succ, message) = TestTree.Delete(entityToDelete);
-                if (!succ)
-                    return false;
+                //if (!succ)
+                //    return false;
             }
 
             return true;

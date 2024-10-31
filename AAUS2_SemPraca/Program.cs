@@ -31,17 +31,15 @@ namespace AAUS2_SemPraca
             //var success = tester.CreateTestCase(100000, 70.00, 30.00, 0.00);
             //StructTester4Dim tester = StructTester4Dim.Instance;
             //var success = tester.CreateTestCase(10000, 100.00, 0.00, 0.00);
-            List<double[]> valuesToAdd = new List<double[]>();
-            valuesToAdd.Add(new double[] { 4.0, 1.0 });
-            valuesToAdd.Add(new double[] { 7.0, 5.0 });
-            valuesToAdd.Add(new double[] { 7.0, 2.0 });
-            valuesToAdd.Add(new double[] { 7.0, 9.0 });
-            valuesToAdd.Add(new double[] { 7.0, 6.0 });
-            valuesToAdd.Add(new double[] { 8.0, 7.0 });
+            //List<double[]> valuesToAdd = new List<double[]>();
+            //valuesToAdd.Add(new double[] { 4.0, 1.0 });
+            //valuesToAdd.Add(new double[] { 7.0, 5.0 });
+            //valuesToAdd.Add(new double[] { 7.0, 2.0 });
+            //valuesToAdd.Add(new double[] { 7.0, 9.0 });
+            //valuesToAdd.Add(new double[] { 7.0, 6.0 });
+            //valuesToAdd.Add(new double[] { 8.0, 7.0 });
 
-            var inserted = tester.Insert(valuesToAdd);
-            //tester.TestSearch(inserted);
-            var success = tester.TestDelete(inserted);
+            var success = tester.CreateTestCase(100000, 70.0, 10.0, 20.0);
 
             Console.WriteLine("hod mi sem brejkac prosim");
         }

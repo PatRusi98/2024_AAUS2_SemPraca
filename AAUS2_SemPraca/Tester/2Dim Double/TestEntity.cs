@@ -40,5 +40,10 @@ namespace AAUS2_SemPraca.Tester
         {
             return Key1.GetHashCode() ^ Key2.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return Key1 + " " + Key2;
+        }
     }
 }
