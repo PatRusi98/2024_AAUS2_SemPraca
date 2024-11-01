@@ -8,5 +8,7 @@ namespace AAUS2_SemPraca.Objects
         public required Coordinate LatCoord { get; set; }
         public required double Longitude { get; set; }
         public required Coordinate LongCoord { get; set; }
+
+        public override readonly string ToString() => $"{Latitude}~{LatCoord}~{Longitude}~{LongCoord}";
     }
 }

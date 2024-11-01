@@ -143,7 +143,7 @@ namespace AAUS2_SemPraca.Utils
 
             foreach (var node in returnedNodes)
             {
-                if (node.Value != null)
+                if (node.Value != null && !result.Any(x => x.ID == node.Value.ID)) // len ak sa tam este nenachadza (kvoli tomu, ze ich vkladame 2x)
                     result.Add(node.Value);
             }
 
@@ -152,7 +152,15 @@ namespace AAUS2_SemPraca.Utils
 
         public void SaveToFile()
         {
+            var allItems = SearchAll(GeoEntityType.Unknown);
             
+            using (StreamWriter writer = new StreamWriter("")) // TODO: path
+            {
+                foreach (var item in allItems)
+                {
+                    writer.WriteLine(item.ToString());
+                }
+            }
         }
 
         #region private

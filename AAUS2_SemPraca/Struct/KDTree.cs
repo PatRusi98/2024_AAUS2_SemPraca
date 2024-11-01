@@ -78,7 +78,7 @@ namespace AAUS2_SemPraca.Struct
         public List<T>? Search(T value)                                                         // bodove vyhladavanie na operacie s konkretymi prvkami
         {
             if (Root == null)                                                                   // ak neexistuje localRoot, strom je prazdny
-                return default;
+                return new();
 
             if (value.GetKeys().Length != Dimensions)                                           // kontrola dimenzii kluca
                 throw new ArgumentException("Wrong key dimension!");

@@ -30,7 +30,6 @@
         {
             Menu = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
-            NewProject = new ToolStripMenuItem();
             LoadFromFile = new ToolStripMenuItem();
             SaveToFile = new ToolStripMenuItem();
             Exit = new ToolStripMenuItem();
@@ -42,7 +41,6 @@
             InsertProperty = new ToolStripMenuItem();
             SearchProperty = new ToolStripMenuItem();
             FindAllProperties = new ToolStripMenuItem();
-            allObjectsToolStripMenuItem1 = new ToolStripMenuItem();
             allObjectsToolStripMenuItem = new ToolStripMenuItem();
             FindObjectByPoint = new ToolStripMenuItem();
             FindAllObjects = new ToolStripMenuItem();
@@ -76,29 +74,24 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { NewProject, LoadFromFile, SaveToFile, Exit });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { LoadFromFile, SaveToFile, Exit });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 22);
             fileToolStripMenuItem.Text = "File";
-            // 
-            // NewProject
-            // 
-            NewProject.Name = "NewProject";
-            NewProject.Size = new Size(157, 22);
-            NewProject.Text = "New project";
-            NewProject.Click += NewProject_Click;
             // 
             // LoadFromFile
             // 
             LoadFromFile.Name = "LoadFromFile";
             LoadFromFile.Size = new Size(157, 22);
             LoadFromFile.Text = "Load from file...";
+            LoadFromFile.Click += LoadFromFile_Click;
             // 
             // SaveToFile
             // 
             SaveToFile.Name = "SaveToFile";
             SaveToFile.Size = new Size(157, 22);
             SaveToFile.Text = "Save to file...";
+            SaveToFile.Click += SaveToFile_Click;
             // 
             // Exit
             // 
@@ -119,12 +112,14 @@
             InsertParcel.Name = "InsertParcel";
             InsertParcel.Size = new Size(114, 22);
             InsertParcel.Text = "Insert";
+            InsertParcel.Click += InsertParcel_Click;
             // 
             // SearchParcel
             // 
             SearchParcel.Name = "SearchParcel";
-            SearchParcel.Size = new Size(114, 22);
+            SearchParcel.Size = new Size(180, 22);
             SearchParcel.Text = "Search";
+            SearchParcel.Click += SearchParcel_Click;
             // 
             // FindAllParcels
             // 
@@ -135,7 +130,7 @@
             // 
             // propertyToolStripMenuItem
             // 
-            propertyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { InsertProperty, SearchProperty, FindAllProperties, allObjectsToolStripMenuItem1 });
+            propertyToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { InsertProperty, SearchProperty, FindAllProperties });
             propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
             propertyToolStripMenuItem.Size = new Size(64, 22);
             propertyToolStripMenuItem.Text = "Property";
@@ -143,28 +138,23 @@
             // InsertProperty
             // 
             InsertProperty.Name = "InsertProperty";
-            InsertProperty.Size = new Size(131, 22);
+            InsertProperty.Size = new Size(180, 22);
             InsertProperty.Text = "Insert";
+            InsertProperty.Click += InsertProperty_Click;
             // 
             // SearchProperty
             // 
             SearchProperty.Name = "SearchProperty";
-            SearchProperty.Size = new Size(131, 22);
+            SearchProperty.Size = new Size(180, 22);
             SearchProperty.Text = "Search";
+            SearchProperty.Click += SearchProperty_Click;
             // 
             // FindAllProperties
             // 
             FindAllProperties.Name = "FindAllProperties";
-            FindAllProperties.Size = new Size(131, 22);
+            FindAllProperties.Size = new Size(180, 22);
             FindAllProperties.Text = "Find All";
             FindAllProperties.Click += FindAllProperties_Click;
-            // 
-            // allObjectsToolStripMenuItem1
-            // 
-            allObjectsToolStripMenuItem1.Name = "allObjectsToolStripMenuItem1";
-            allObjectsToolStripMenuItem1.Size = new Size(180, 22);
-            allObjectsToolStripMenuItem1.Text = "All Objects";
-            allObjectsToolStripMenuItem1.Click += allObjectsToolStripMenuItem1_Click;
             // 
             // allObjectsToolStripMenuItem
             // 
@@ -185,7 +175,7 @@
             // FindAllObjects
             // 
             FindAllObjects.Name = "FindAllObjects";
-            FindAllObjects.Size = new Size(153, 22);
+            FindAllObjects.Size = new Size(180, 22);
             FindAllObjects.Text = "Find all objects";
             FindAllObjects.Click += FindAllObjects_Click;
             // 
@@ -200,32 +190,36 @@
             // 
             generateToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { GenerateParcels, GenerateProperties, GenerateRandomObjects });
             generateToolStripMenuItem.Name = "generateToolStripMenuItem";
-            generateToolStripMenuItem.Size = new Size(178, 22);
+            generateToolStripMenuItem.Size = new Size(180, 22);
             generateToolStripMenuItem.Text = "Generate...";
             // 
             // GenerateParcels
             // 
             GenerateParcels.Name = "GenerateParcels";
-            GenerateParcels.Size = new Size(160, 22);
+            GenerateParcels.Size = new Size(180, 22);
             GenerateParcels.Text = "Parcels";
+            GenerateParcels.Click += GenerateParcels_Click;
             // 
             // GenerateProperties
             // 
             GenerateProperties.Name = "GenerateProperties";
-            GenerateProperties.Size = new Size(160, 22);
+            GenerateProperties.Size = new Size(180, 22);
             GenerateProperties.Text = "Properties";
+            GenerateProperties.Click += GenerateProperties_Click;
             // 
             // GenerateRandomObjects
             // 
             GenerateRandomObjects.Name = "GenerateRandomObjects";
-            GenerateRandomObjects.Size = new Size(160, 22);
+            GenerateRandomObjects.Size = new Size(180, 22);
             GenerateRandomObjects.Text = "Random objects";
+            GenerateRandomObjects.Click += GenerateRandomObjects_Click;
             // 
             // RandomOperations
             // 
             RandomOperations.Name = "RandomOperations";
-            RandomOperations.Size = new Size(178, 22);
+            RandomOperations.Size = new Size(180, 22);
             RandomOperations.Text = "Random operations";
+            RandomOperations.Click += RandomOperations_Click;
             // 
             // DataGrid
             // 
@@ -305,7 +299,6 @@
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem parcelToolStripMenuItem;
         private ToolStripMenuItem propertyToolStripMenuItem;
-        private ToolStripMenuItem NewProject;
         private ToolStripMenuItem LoadFromFile;
         private ToolStripMenuItem SaveToFile;
         private ToolStripMenuItem Exit;
@@ -324,7 +317,6 @@
         private ToolStripMenuItem RandomOperations;
         private ToolStripMenuItem FindAllParcels;
         private ToolStripMenuItem FindAllProperties;
-        private ToolStripMenuItem allObjectsToolStripMenuItem1;
         private DataGridViewTextBoxColumn TypeColumn;
         private DataGridViewTextBoxColumn NumberColumn;
         private DataGridViewTextBoxColumn DescriptionColumn;

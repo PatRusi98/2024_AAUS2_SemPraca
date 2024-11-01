@@ -257,5 +257,56 @@ namespace AAUS2_SemPraca
         {
             return Handler.SearchAll();
         }
+
+        /*
+         * Ulozi vsetky objekty do suboru
+         */
+        public void SaveToFile(string path)
+        {
+            var allItems = Handler.SearchAll();
+
+            using (StreamWriter writer = new StreamWriter(path))
+            {
+                foreach (var item in allItems)
+                {
+                    writer.WriteLine(item.ToString());
+                }
+            }
+        }
+
+        /*
+         * Nacita vsetky objekty zo suboru
+         */
+        public void LoadFromFile(string path)
+        {
+            using (StreamReader reader = new StreamReader(path))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var values = line.Split(';'); // "{Type};{Number};{Description};{Point1};{Point2}"
+
+                    var type = values[0] == "Parcel" ? GeoEntityType.Parcel : GeoEntityType.Property;
+                    var number = int.Parse(values[1]);
+                    var description = values[2];
+                    var point1 = values[3].Split('~');
+                    var point2 = values[4].Split('~');
+
+                    var lat1 = double.Parse(point1[0]);
+                    var latCoord1 = point1[1].First();
+                    var long1 = double.Parse(point1[2]);
+                    var longCoord1 = point1[3].First();
+                    var lat2 = double.Parse(point2[0]);
+                    var latCoord2 = point2[1].First();
+                    var long2 = double.Parse(point2[2]);
+                    var longCoord2 = point2[3].First();
+
+                    if (type == GeoEntityType.Parcel)
+                        AddParcel(number, description, lat1, latCoord1, long1, longCoord1, lat2, latCoord2, long2, longCoord2);
+                    else
+                        AddProperty(number, description, lat1, latCoord1, long1, longCoord1, lat2, latCoord2, long2, longCoord2);
+                }
+            }
+        }
     }
 }
