@@ -1,5 +1,6 @@
 ﻿using AAUS2_SemPraca.Objects;
 using AAUS2_SemPraca.Struct;
+using AAUS2_SemPraca.Tester;
 using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Utils
@@ -10,6 +11,8 @@ namespace AAUS2_SemPraca.Utils
         private KDTree<GeoNode> TreeParcel { get; } = new();
         private KDTree<GeoNode> TreeProperty { get; } = new();
         private KDTree<GeoNode> TreeObjects { get; } = new();
+        private Random _random = new();
+        private Generator _generator = Generator.Instance;
 
         private GeoSystemHandler() { }
 
@@ -159,6 +162,38 @@ namespace AAUS2_SemPraca.Utils
                 foreach (var item in allItems)
                 {
                     writer.WriteLine(item.ToString());
+                }
+            }
+        }
+
+        public void Test(int numberOfIterations, double insertProb, double searchProb, double deleteProb)
+        {
+            var combinedProb = insertProb + searchProb + deleteProb;
+            double insert = insertProb / combinedProb;
+            double search = searchProb / combinedProb;
+            double delete = deleteProb / combinedProb;
+            var searched = new List<GeoEntity>();
+
+            for (int i = 0; i < numberOfIterations; i++)
+            {
+                var operation = _random.NextDouble();
+
+                switch (operation)
+                {
+                    case var expression when operation < insert:
+                        searched.Add(_generator.GenerateEntity());
+                        break;
+                    case var expression when operation < insert + search:
+                        Search(searched[_random.Next(searched.Count)].Point1);
+                        break;
+                    case var expression when operation > search:
+                        var toDelete = searched[_random.Next(searched.Count)];
+                        var ok = Delete(toDelete);
+                        if (ok)
+                            searched.Remove(toDelete);
+                        break;
+                    default:
+                        throw new ArgumentException("Something went wrong while testing");
                 }
             }
         }

@@ -1,4 +1,5 @@
 using AAUS2_SemPraca.Forms;
+using AAUS2_SemPraca.Utils;
 
 namespace AAUS2_SemPraca
 {
@@ -9,6 +10,7 @@ namespace AAUS2_SemPraca
         public Form1()
         {
             InitializeComponent();
+            _project = SemProject.Instance;
         }
 
         private void Exit_Click(object sender, EventArgs e)
@@ -18,28 +20,65 @@ namespace AAUS2_SemPraca
 
         private void FindAllObjects_Click(object sender, EventArgs e)
         {
+            DataGrid.Rows.Clear();
             var dataSource = _project.GetAllEntities();
+            foreach (var entity in dataSource)
+            {
+                if (entity != null)
+                {
+                    DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                }
+            }
         }
 
         private void FindObjectByPoint_Click(object sender, EventArgs e)
         {
+            DataGrid.Rows.Clear();
             using (var searchForm = new SearchForm())
             {
                 if (searchForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var lat = searchForm.Latitude;
+                    var lon = searchForm.Longitude;
+                    var latCoord = searchForm.LatCoord.GetDescription().First();
+                    var lonCoord = searchForm.LongCoord.GetDescription().First();
+
+                    var dataSource = _project.SearchAllObjectsOnLocation(lat, latCoord, lon, lonCoord);
+                    foreach (var entity in dataSource)
+                    {
+                        if (entity != null)
+                        {
+                            DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                        }
+                    }
                 }
             }
         }
 
         private void FindAllProperties_Click(object sender, EventArgs e)
         {
+                
             var dataSource = _project.GetAllProperties();
+            foreach (var entity in dataSource)
+            {
+                if (entity != null)
+                {
+                    DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                }
+            }
         }
 
         private void FindAllParcels_Click(object sender, EventArgs e)
         {
+            DataGrid.Rows.Clear();
             var dataSource = _project.GetAllParcels();
+            foreach (var entity in dataSource)
+            {
+                if (entity != null)
+                {
+                    DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                }
+            }
         }
 
         private void RandomOperations_Click(object sender, EventArgs e)
@@ -48,7 +87,12 @@ namespace AAUS2_SemPraca
             {
                 if (testerForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var numberOfOperations = testerForm.NumberOfOperations;
+                    var insertProb = testerForm.InsertProbability;
+                    var searchProb = testerForm.SearchProbability;
+                    var deleteProb = testerForm.DeleteProbability;
+
+                    _project.Test(numberOfOperations, insertProb, searchProb, deleteProb);
                 }
             }
         }
@@ -109,7 +153,18 @@ namespace AAUS2_SemPraca
             {
                 if (insertForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var number = insertForm.Number;
+                    var desc = insertForm.Description;
+                    var lat1 = insertForm.Latitude1;
+                    var lat2 = insertForm.Latitude2;
+                    var latCoord1 = insertForm.LatCoord1.GetDescription().First();
+                    var latCoord2 = insertForm.LatCoord2.GetDescription().First();
+                    var long1 = insertForm.Longitude1;
+                    var long2 = insertForm.Longitude2;
+                    var longCoord1 = insertForm.LongCoord1.GetDescription().First();
+                    var longCoord2 = insertForm.LongCoord2.GetDescription().First();
+
+                    _project.AddParcel(number, desc, lat1, latCoord1, long1, longCoord1, lat2, latCoord2, long2, longCoord2);
                 }
             }
         }
@@ -120,7 +175,8 @@ namespace AAUS2_SemPraca
             {
                 if (generatorForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var numberOfObjects = generatorForm.NumberOfObjects;
+                    _project.GenerateRandomParcels(numberOfObjects);
                 }
             }
         }
@@ -131,7 +187,8 @@ namespace AAUS2_SemPraca
             {
                 if (generatorForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var numberOfObjects = generatorForm.NumberOfObjects;
+                    _project.GenerateRandomProperties(numberOfObjects);
                 }
             }
         }
@@ -142,7 +199,8 @@ namespace AAUS2_SemPraca
             {
                 if (generatorForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var numberOfObjects = generatorForm.NumberOfObjects;
+                    _project.GenerateRandomEntities(numberOfObjects);
                 }
             }
         }
@@ -153,29 +211,66 @@ namespace AAUS2_SemPraca
             {
                 if (insertForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var number = insertForm.Number;
+                    var desc = insertForm.Description;
+                    var lat1 = insertForm.Latitude1;
+                    var lat2 = insertForm.Latitude2;
+                    var latCoord1 = insertForm.LatCoord1.GetDescription().First();
+                    var latCoord2 = insertForm.LatCoord2.GetDescription().First();
+                    var long1 = insertForm.Longitude1;
+                    var long2 = insertForm.Longitude2;
+                    var longCoord1 = insertForm.LongCoord1.GetDescription().First();
+                    var longCoord2 = insertForm.LongCoord2.GetDescription().First();
+
+                    _project.AddProperty(number, desc, lat1, latCoord1, long1, longCoord1, lat2, latCoord2, long2, longCoord2);
                 }
             }
         }
 
         private void SearchProperty_Click(object sender, EventArgs e)
         {
+            DataGrid.Rows.Clear();
             using (var searchForm = new SearchForm())
             {
                 if (searchForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var lat = searchForm.Latitude;
+                    var lon = searchForm.Longitude;
+                    var latCoord = searchForm.LatCoord.GetDescription().First();
+                    var lonCoord = searchForm.LongCoord.GetDescription().First();
+
+                    var dataSource = _project.SearchAllPropertiesOnLocation(lat, latCoord, lon, lonCoord);
+                    foreach (var entity in dataSource)
+                    {
+                        if (entity != null)
+                        {
+                            DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                        }
+                    }
                 }
             }
         }
 
         private void SearchParcel_Click(object sender, EventArgs e)
         {
+            DataGrid.Rows.Clear();
             using (var searchForm = new SearchForm())
             {
                 if (searchForm.ShowDialog() == DialogResult.OK)
                 {
-                    //TODO: implement
+                    var lat = searchForm.Latitude;
+                    var lon = searchForm.Longitude;
+                    var latCoord = searchForm.LatCoord.GetDescription().First();
+                    var lonCoord = searchForm.LongCoord.GetDescription().First();
+
+                    var dataSource = _project.SearchAllParcelsOnLocation(lat, latCoord, lon, lonCoord);
+                    foreach (var entity in dataSource)
+                    {
+                        if (entity != null)
+                        {
+                            DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                        }
+                    }
                 }
             }
         }

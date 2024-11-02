@@ -235,6 +235,17 @@ namespace AAUS2_SemPraca
         }
 
         /*
+         * Tester
+         */
+        public void Test(int number, double insertProb, double searchProb, double deleteProb)
+        {
+            if (number < 1)
+                return;
+
+            Handler.Test(number, insertProb, searchProb, deleteProb);
+        }
+
+        /*
          * Vrati vsetky parcely
          */
         public List<GeoEntity> GetAllParcels()

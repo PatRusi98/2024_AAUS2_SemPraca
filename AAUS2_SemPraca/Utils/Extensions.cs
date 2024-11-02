@@ -1,4 +1,6 @@
 ﻿using AAUS2_SemPraca.Objects;
+using System.ComponentModel;
+using System.Reflection;
 using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Utils
@@ -48,6 +50,15 @@ namespace AAUS2_SemPraca.Utils
             }
 
             throw new ArgumentException("Key is not comparable!");
+        }
+
+        public static string GetDescription(this Enum value)
+        {
+            FieldInfo field = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute attribute = field.GetCustomAttribute<DescriptionAttribute>();
+
+            return attribute != null ? attribute.Description : value.ToString();
         }
 
         #region private

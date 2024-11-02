@@ -11,5 +11,51 @@
         {
             InitializeComponent();
         }
+
+        private bool ValidateInputs()
+        {
+            if (NumberInput.Value < NumberInput.Minimum || NumberInput.Value > NumberInput.Maximum)
+            {
+                MessageBox.Show($"Enter number between {NumberInput.Minimum} and {NumberInput.Maximum}.", "Wrong Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                NumberInput.Focus();
+                return false;
+            }
+
+            if (InsertInput.Value < InsertInput.Minimum || InsertInput.Value > InsertInput.Maximum)
+            {
+                MessageBox.Show($"Enter number between {InsertInput.Minimum} and {InsertInput.Maximum}.", "Wrong Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                InsertInput.Focus();
+                return false;
+            }
+
+            if (SearchInput.Value < SearchInput.Minimum || SearchInput.Value > SearchInput.Maximum)
+            {
+                MessageBox.Show($"Enter number between {SearchInput.Minimum} and {SearchInput.Maximum}.", "Wrong Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SearchInput.Focus();
+                return false;
+            }
+
+            if (DeleteInput.Value < DeleteInput.Minimum || DeleteInput.Value > DeleteInput.Maximum)
+            {
+                MessageBox.Show($"Enter number between {DeleteInput.Minimum} and {DeleteInput.Maximum}.", "Wrong Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DeleteInput.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        private void TestButton_Click(object sender, EventArgs e)
+        {
+            if (ValidateInputs())
+            {
+                NumberOfOperations = (int)NumberInput.Value;
+                InsertProbability = (double)InsertInput.Value;
+                SearchProbability = (double)SearchInput.Value;
+                DeleteProbability = (double)DeleteInput.Value;
+
+                Close();
+            }
+        }
     }
 }
