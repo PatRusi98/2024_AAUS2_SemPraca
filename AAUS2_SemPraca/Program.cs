@@ -28,8 +28,15 @@ namespace AAUS2_SemPraca
             //project.AddProperty(51, "random desc property", 123.1234, 'S', 12.3456, 'W', 123.6789, 'S', 12.6789, 'W');
 
             // tester
-            //StructTester tester = StructTester.Instance;
-            //var success = tester.CreateTestCase(100000, 70.00, 30.00, 0.00);
+            while (true)
+            {
+                StructFinalTester tester = new();
+                //tester.TestInsert(20000);
+                tester.CreateTestCase(200, 70.00, 0.00, 30.00);
+            }
+            //StructFinalTester tester = new();
+            //tester.TestInsert(20000);
+            //tester.CreateTestCase(50, 70.00, 20.00, 10.00);
             //StructTester4Dim tester = StructTester4Dim.Instance;
             //var success = tester.CreateTestCase(10000, 100.00, 0.00, 0.00);
             //List<double[]> valuesToAdd = new List<double[]>();
@@ -42,7 +49,7 @@ namespace AAUS2_SemPraca
 
             //var success = tester.CreateTestCase(100000, 70.0, 10.0, 20.0);
 
-            //Console.WriteLine("hod mi sem brejkac prosim");
+            Console.WriteLine("hod mi sem brejkac prosim");
         }
     }
 }

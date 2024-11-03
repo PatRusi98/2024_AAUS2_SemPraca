@@ -1,4 +1,5 @@
 using AAUS2_SemPraca.Forms;
+using AAUS2_SemPraca.Objects;
 using AAUS2_SemPraca.Utils;
 
 namespace AAUS2_SemPraca
@@ -26,7 +27,9 @@ namespace AAUS2_SemPraca
             {
                 if (entity != null)
                 {
-                    DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                    int rowIndex = DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2, entity);
+                    DataGrid.Rows[rowIndex].Tag = entity;
+                    DataGrid.Rows[rowIndex].Cells["Details"].Value = "Action";
                 }
             }
         }
@@ -48,7 +51,9 @@ namespace AAUS2_SemPraca
                     {
                         if (entity != null)
                         {
-                            DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                            int rowIndex = DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2, entity);
+                            DataGrid.Rows[rowIndex].Tag = entity;
+                            DataGrid.Rows[rowIndex].Cells["Details"].Value = "Action";
                         }
                     }
                 }
@@ -57,13 +62,15 @@ namespace AAUS2_SemPraca
 
         private void FindAllProperties_Click(object sender, EventArgs e)
         {
-                
+            DataGrid.Rows.Clear();
             var dataSource = _project.GetAllProperties();
             foreach (var entity in dataSource)
             {
                 if (entity != null)
                 {
-                    DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                    int rowIndex = DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2, entity);
+                    DataGrid.Rows[rowIndex].Tag = entity;
+                    DataGrid.Rows[rowIndex].Cells["Details"].Value = "Action";
                 }
             }
         }
@@ -76,7 +83,9 @@ namespace AAUS2_SemPraca
             {
                 if (entity != null)
                 {
-                    DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                    int rowIndex = DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2, entity);
+                    DataGrid.Rows[rowIndex].Tag = entity;
+                    DataGrid.Rows[rowIndex].Cells["Details"].Value = "Action";
                 }
             }
         }
@@ -200,7 +209,8 @@ namespace AAUS2_SemPraca
                 if (generatorForm.ShowDialog() == DialogResult.OK)
                 {
                     var numberOfObjects = generatorForm.NumberOfObjects;
-                    _project.GenerateRandomEntities(numberOfObjects);
+                    var intersection = generatorForm.IntersectionProbability;
+                    _project.GenerateRandomEntities(numberOfObjects, intersection);
                 }
             }
         }
@@ -244,7 +254,9 @@ namespace AAUS2_SemPraca
                     {
                         if (entity != null)
                         {
-                            DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                            int rowIndex = DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2, entity);
+                            DataGrid.Rows[rowIndex].Tag = entity;
+                            DataGrid.Rows[rowIndex].Cells["Details"].Value = "Action";
                         }
                     }
                 }
@@ -268,7 +280,59 @@ namespace AAUS2_SemPraca
                     {
                         if (entity != null)
                         {
-                            DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2);
+                            int rowIndex = DataGrid.Rows.Add(entity.Type, entity.Number, entity.Description, entity.Point1, entity.Point2, entity);
+                            DataGrid.Rows[rowIndex].Tag = entity;
+                            DataGrid.Rows[rowIndex].Cells["Details"].Value = "Action";
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == DataGrid.Columns["Details"].Index && e.RowIndex >= 0)
+            {
+                DataGridViewRow selectedRow = DataGrid.Rows[e.RowIndex];
+                GeoEntity geoEntity = selectedRow.Tag as GeoEntity;
+
+                if (selectedRow.Cells["TypeColumn"].Value == null)
+                   return;
+
+                if (selectedRow.Cells["TypeColumn"].Value.ToString() == "Parcel")
+                    geoEntity = (Parcel)geoEntity;
+                else if (selectedRow.Cells["TypeColumn"].Value.ToString() == "Property")
+                    geoEntity = (Property)geoEntity;
+
+                using (var detailsForm = new DetailsForm(selectedRow, geoEntity))
+                {
+                    if (detailsForm.ShowDialog() == DialogResult.OK)
+                    {
+                        var number = detailsForm.Number;
+                        var desc = detailsForm.Description;
+                        var lat1 = detailsForm.Latitude1;
+                        var lat2 = detailsForm.Latitude2;
+                        var latCoord1 = detailsForm.Lat1Coord.GetDescription().First();
+                        var latCoord2 = detailsForm.Lat2Coord.GetDescription().First();
+                        var long1 = detailsForm.Longitude1;
+                        var long2 = detailsForm.Longitude2;
+                        var longCoord1 = detailsForm.Long1Coord.GetDescription().First();
+                        var longCoord2 = detailsForm.Long2Coord.GetDescription().First();
+
+                        selectedRow.Cells["NumberColumn"].Value = number;
+                        selectedRow.Cells["DescriptionColumn"].Value = desc;
+                        selectedRow.Cells["GPS1Column"].Value = lat1 + "~" + detailsForm.Lat1Coord.GetDescription() + "~" + long1 + "~" + detailsForm.Long1Coord.GetDescription();
+                        selectedRow.Cells["GPS2Column"].Value = lat2 + "~" + detailsForm.Lat2Coord.GetDescription() + "~" + long2 + "~" + detailsForm.Long2Coord.GetDescription();
+
+                        if (geoEntity is Parcel parcel)
+                        {
+                            _project.DeleteParcel(parcel);
+                            _project.AddParcel(number, desc, lat1, latCoord1, long1, longCoord1, lat2, latCoord2, long2, longCoord2);
+                        }
+                        else if (geoEntity is Property property)
+                        {
+                            _project.DeleteProperty(property);
+                            _project.AddProperty(number, desc, lat1, latCoord1, long1, longCoord1, lat2, latCoord2, long2, longCoord2);
                         }
                     }
                 }

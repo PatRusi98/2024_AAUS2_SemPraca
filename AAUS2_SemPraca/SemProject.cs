@@ -218,19 +218,51 @@ namespace AAUS2_SemPraca
         /*
          * Generovanie nahodnych objektov
          */
-        public void GenerateRandomEntities(int number)
+        public void GenerateRandomEntities(int number, int intersection = 0)
         {
             if (number < 1)
                 return;
 
-            for (int i = 0; i < number; i++)
+            int parcels = 0;
+            int properties = 0;
+            int propIntersect = 0;
+
+            if (intersection > 0)
             {
-                var entityToAdd = DataGenerator.GenerateEntity();
+                parcels = number * 2 / 3;
+                propIntersect = number - parcels * intersection / 100;
+                properties = number - parcels - propIntersect;
+            }
+            else
+            {
+                parcels = number * 2 / 3;
+                propIntersect = number - parcels;
+            }
+
+            var gpsList = DataGenerator.GenerateListOfGPSLocations(parcels);
+
+            for (int i = 0; i < parcels; i++)
+            {
+                var entityToAdd = DataGenerator.GenerateEntity(Enums.GeoEntityType.Parcel, gpsList);
+
+                if (entityToAdd is Parcel parcel)
+                    Handler.Insert(parcel);
+            }
+
+            for (int i = 0; i < propIntersect; i++)
+            {
+                var entityToAdd = DataGenerator.GenerateEntity(Enums.GeoEntityType.Property, gpsList);
 
                 if (entityToAdd is Property property)
                     Handler.Insert(property);
-                else if (entityToAdd is Parcel parcel)
-                    Handler.Insert(parcel);
+            }
+
+            for (int i = 0; i < properties; i++)
+            {
+                var entityToAdd = DataGenerator.GenerateEntity(Enums.GeoEntityType.Property);
+
+                if (entityToAdd is Property property)
+                    Handler.Insert(property);
             }
         }
 

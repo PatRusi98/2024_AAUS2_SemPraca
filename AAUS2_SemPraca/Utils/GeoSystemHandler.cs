@@ -40,7 +40,21 @@ namespace AAUS2_SemPraca.Utils
                 (success, message) = TreeObjects.Insert(new GeoNode(parcel.Key1) { Value = parcel });
                 (success, message) = TreeObjects.Insert(new GeoNode(parcel.Key2) { Value = parcel });
 
-                parcel.AddSubAreas(SearchOverlapItems(parcel));
+                var groupedItems = SearchOverlapItems(parcel).GroupBy(x => x.ID);
+                List<GeoEntity> overlapItems = new();
+                foreach (var group in groupedItems)
+                {
+                    overlapItems.Add(group.First());
+                }
+                parcel.AddSubAreas(overlapItems);
+
+                List<GeoEntity> toAdd = new();
+                toAdd.Add(parcel);
+
+                foreach (var item in overlapItems)
+                {
+                    item.AddSubAreas(toAdd);
+                }
             }
             else if (entity is Property property)
             {
@@ -50,7 +64,21 @@ namespace AAUS2_SemPraca.Utils
                 (success, message) = TreeObjects.Insert(new GeoNode(property.Key1) { Value = property });
                 (success, message) = TreeObjects.Insert(new GeoNode(property.Key2) { Value = property });
 
-                property.AddSubAreas(SearchOverlapItems(property));
+                var groupedItems = SearchOverlapItems(property).GroupBy(x => x.ID);
+                List<GeoEntity> overlapItems = new();
+                foreach (var group in groupedItems)
+                {
+                    overlapItems.Add(group.First());
+                }
+                property.AddSubAreas(overlapItems);
+
+                List<GeoEntity> toAdd = new();
+                toAdd.Add(property);
+
+                foreach (var item in overlapItems)
+                {
+                    item.AddSubAreas(toAdd);
+                }
             }
 
             return success;

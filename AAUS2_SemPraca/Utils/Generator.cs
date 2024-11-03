@@ -21,7 +21,7 @@ namespace AAUS2_SemPraca.Utils
             }
         }
 
-        public GeoEntity GenerateEntity(GeoEntityType type = GeoEntityType.Unknown)
+        public GeoEntity GenerateEntity(GeoEntityType type = GeoEntityType.Unknown, List<GPSLocation[]>? listGps = null)
         {
             var property = type switch
             {
@@ -30,7 +30,29 @@ namespace AAUS2_SemPraca.Utils
                 _ => _random.Next() % 2 == 0,
             };
             var number = _random.Next();
-            var gpss = GenerateGPSLocations();
+            GPSLocation[]? gpss = [];
+
+            if (listGps != null)
+            {
+                var count = listGps.Count;
+                if (count > 0)
+                {
+                    gpss = listGps[_random.Next(count)];
+
+                    if (property)
+                        listGps.Remove(gpss);
+
+                }
+                else
+                {
+                    gpss = GenerateGPSLocations();
+                }
+            }
+            else
+            {
+                gpss = GenerateGPSLocations();
+            }
+
             var description = "Description of " + (property ? "property" : "parcel") + " number: " + number;
             GeoEntity result;
 
@@ -46,7 +68,18 @@ namespace AAUS2_SemPraca.Utils
             return result;
         }
 
-        #region private
+        public List<GPSLocation[]> GenerateListOfGPSLocations(int number)
+        {
+            List<GPSLocation[]> result = new();
+
+            for (int i = 0; i < number; i++)
+            {
+                result.Add(GenerateGPSLocations());
+            }
+
+            return result;
+        }
+
         private GPSLocation[] GenerateGPSLocations()
         {
             var lat1 = Math.Round(_random.NextDouble() * 89, 4);                                            // generovanie nahodnych GPS lokalit, maximalne do 89 sirky a 179 dlzky aby sa neprelievali
@@ -76,6 +109,5 @@ namespace AAUS2_SemPraca.Utils
 
             return result;
         }
-        #endregion
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace AAUS2_SemPraca.Struct
 {
 
-    public class KDTreeNode<T>(T value, int depth, KDTreeNode<T>? parent = null)
+    public class KDTreeNode<T>(T? value, int depth, KDTreeNode<T>? parent = null)
     {
         public T? Value { get; set; } = value;
         public KDTreeNode<T>? LeftSon { get; set; } = null;

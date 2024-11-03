@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AAUS2_SemPraca.Struct.KDTreeNode&lt;T&gt;" Collapsed="true">
+    <Position X="1.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAUAAAAAAAAAAAAAQABAAAAAAAAgAAAgAAAAAAA=</HashCode>
+      <FileName>Struct\KDTreeNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AAUS2_SemPraca.Struct.KDTree&lt;T&gt;" Collapsed="true">
+    <Position X="1.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAEAAAAACAAAAEAAQIAAEEAAAAAAAAgAAAgACA=</HashCode>
+      <FileName>Struct\KDTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AAUS2_SemPraca.Objects.GeoEntity" Collapsed="true">
+    <Position X="6.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAggAAEAEAAAAAEAEASAAAAAQAAAAAIAAA=</HashCode>
+      <FileName>Objects\GeoEntity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AAUS2_SemPraca.Objects.GeoNode" Collapsed="true">
+    <Position X="6.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAACAAAAAAAAgAAAAAAAAAAAAIAAAAAgAAAAAiA=</HashCode>
+      <FileName>Objects\GeoNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AAUS2_SemPraca.Objects.Parcel" Collapsed="true">
+    <Position X="5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Parcel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AAUS2_SemPraca.Objects.Property" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Property.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AAUS2_SemPraca.Utils.GeoSystemHandler" Collapsed="true">
+    <Position X="6.25" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQEAEQgAABAAAAAAAAAAAAAACEAAAAAQAABCAAhAQE=</HashCode>
+      <FileName>Utils\GeoSystemHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="AAUS2_SemPraca.Objects.GPSLocation" Collapsed="true">
+    <Position X="3.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAEAAAIAAAAAAAAAAAgAAAAAAABAAA=</HashCode>
+      <FileName>Objects\GPSLocation.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="AAUS2_SemPraca.Struct.IMultiKey" Collapsed="true">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Struct\IMultiKey.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

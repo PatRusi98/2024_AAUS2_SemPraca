@@ -53,11 +53,19 @@ namespace AAUS2_SemPraca.Struct
 
                 if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)      // porovnanie klucov v danej dimenzii
                 {
+                    if (currNode.LeftSon != null)                                               // kontrola ci nam nevidi node s prazdnym value
+                        if (currNode.LeftSon!.Value == null)
+                            currNode.LeftSon = null;
+
                     currNode = currNode.LeftSon;                                                // ak je kluc mensi, ideme cestou dolava
                     isLeft = true;
                 }
                 else
                 {
+                    if (currNode.RightSon != null)                                               // kontrola ci nam nevidi node s prazdnym value
+                        if (currNode.RightSon!.Value == null)
+                            currNode.RightSon = null;
+
                     currNode = currNode.RightSon;                                               // ak je kluc vacsi, ideme cestou doprava
                     isLeft = false;
                 }
@@ -108,9 +116,21 @@ namespace AAUS2_SemPraca.Struct
                 int axis = depth % Dimensions;
 
                 if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)     // porovnanie klucov v danej dimenzii
+                {
+                    if (currNode.LeftSon != null)                                               // kontrola ci nam nevidi node s prazdnym value
+                        if (currNode.LeftSon!.Value == null)
+                            currNode.LeftSon = null;
+
                     currNode = currNode.LeftSon;                                                // ak je kluc mensi, ideme dolava
+                }
                 else
+                {
+                    if (currNode.RightSon != null)
+                        if (currNode.RightSon!.Value == null)
+                            currNode.RightSon = null;
+
                     currNode = currNode.RightSon;                                               // ak je kluc vacsi, ideme doprava
+                }
 
                 depth++;
             }
@@ -118,7 +138,7 @@ namespace AAUS2_SemPraca.Struct
             return found;
         }
 
-        public List<T>? GetAllItems(KDTreeNode<T>? root = null, bool includeDuplicates = false)
+        public List<T>? GetAllItems(KDTreeNode<T>? root = null, bool includeDuplicates = true)
         {
             List<T> items = new();
             Stack<KDTreeNode<T>> stack = new();
@@ -138,6 +158,17 @@ namespace AAUS2_SemPraca.Struct
                 }
 
                 currNode = stack.Pop();
+
+
+
+                if (currNode.LeftSon != null)                                                   // kontrola ci nam nevisi prazdna noda
+                    if (currNode.LeftSon!.Value == null)
+                        currNode.LeftSon = null;
+
+                if (currNode.RightSon != null) 
+                    if (currNode.RightSon!.Value == null)
+                        currNode.RightSon = null;
+
                 items.Add(currNode.Value!);
 
                 if (includeDuplicates)                                                          // pridame duplikaty
@@ -197,11 +228,19 @@ namespace AAUS2_SemPraca.Struct
 
                 if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)     // porovnanie klucov v danej dimenzii
                 {
+                    if (currNode.LeftSon != null)                                               // kontrola ci nam nevidi node s prazdnym value
+                        if (currNode.LeftSon!.Value == null)
+                            currNode.LeftSon = null;
+
                     currNode = currNode.LeftSon;
                     isLeft = true;
                 }
                 else
                 {
+                    if (currNode.RightSon != null)                                               // kontrola ci nam nevidi node s prazdnym value
+                        if (currNode.RightSon!.Value == null)
+                            currNode.RightSon = null;
+
                     currNode = currNode.RightSon;
                     isLeft = false;
                 }
@@ -211,6 +250,21 @@ namespace AAUS2_SemPraca.Struct
             
             if (currNode?.LeftSon == null && currNode?.RightSon == null)                          // ak je listom
             {
+                if (parentNode == null)
+                {
+                    Root = null;
+                    return (true, DebugCode.Success);
+                }
+                else if (parentNode == Root)
+                {
+                    if (isLeft)
+                        Root.LeftSon = null;
+                    else
+                        Root.RightSon = null;
+
+                    return (true, DebugCode.Success);
+                }
+
                 if (isLeft)
                     parentNode!.LeftSon = null;
                 else
@@ -229,18 +283,43 @@ namespace AAUS2_SemPraca.Struct
 
                 if (nodeToHandle.LeftSon == null && nodeToHandle.RightSon == null)
                 {
-                    if (nodeToHandle.Value!.Equals(value))
+                    if (nodesToRemove.Count == 2) 
                     {
-                        alreadyServed.Add(nodeToHandle);
+                        HandleReplacing(nodesToRemove.First(), nodeToHandle);
+                        nodesToRemove.Remove(nodesToRemove.First());
+                        continue;
                     }
 
                     if (nodeToHandle.Parent != null)
                     {
-                        if (nodeToHandle.Parent!.LeftSon == nodeToHandle)
-                            nodeToHandle.Parent.LeftSon = null;
+                        if (nodeToHandle.Parent.LeftSon == nodeToHandle)
+                        {
+                            if (Root?.LeftSon == nodeToHandle)
+                                Root.LeftSon = null;
+                            else
+                                nodeToHandle.Parent.LeftSon = null;
+                        }
                         else
-                            nodeToHandle.Parent.RightSon = null;
+                        {
+                            if (Root?.RightSon == nodeToHandle)
+                                Root.RightSon = null;
+                            else
+                                nodeToHandle.Parent.RightSon = null;
+                        }
+
+                        nodeToHandle.Parent = null;
                     }
+                    else
+                    {
+                        Root = null;
+                    }
+
+                    alreadyServed.Add(nodeToHandle);
+                    foreach (var item in nodeToHandle.Duplicates)
+                    {
+                        alreadyServed.Add(item);
+                    }
+
                     nodesToRemove.Remove(nodeToHandle);
                     continue;
                 }
@@ -261,8 +340,16 @@ namespace AAUS2_SemPraca.Struct
 
             foreach (var item in alreadyServed)
             {
+                if (item.Value.Equals(value))
+                {
+                    continue;
+                }
+
                 Insert(item.Value!);
             }
+
+            var dlt = alreadyServed.Where(x => x.Value.Equals(value));
+            dlt.First().Value = default;
             
             return (true, DebugCode.Success);
         }
@@ -403,9 +490,65 @@ namespace AAUS2_SemPraca.Struct
 
         private void HandleReplacing(KDTreeNode<T> oldNode, KDTreeNode<T> newNode)
         {
-            KDTreeNode<T> temp = new(oldNode.Value!, 0);
+            var root = false;
+            if (Root == oldNode)
+                root = true;
+
+            KDTreeNode<T> temp = new(oldNode.Value, 0);
+            temp.Duplicates = oldNode.Duplicates;
             oldNode.Value = newNode.Value;
+            oldNode.Duplicates = newNode.Duplicates;
             newNode.Value = temp.Value;
+            newNode.Duplicates = temp.Duplicates;
+
+            foreach (var item in oldNode.Duplicates) {
+                item.Parent = oldNode.Parent;
+            }
+
+            foreach (var item in newNode.Duplicates) 
+            {
+                item.Parent = newNode.Parent; 
+            }
+
+            if (oldNode.LeftSon != null)
+            {
+                oldNode.LeftSon.Parent = oldNode;
+                foreach (var item in oldNode.LeftSon.Duplicates)
+                {
+                    item.Parent = oldNode;
+                }
+            }
+
+            if (oldNode.RightSon != null)
+            {
+                oldNode.RightSon.Parent = oldNode;
+                foreach (var item in oldNode.RightSon.Duplicates)
+                {
+                    item.Parent = oldNode;
+                }
+            }
+
+            if (newNode.LeftSon != null)
+            {
+                newNode.LeftSon.Parent = newNode;
+                foreach (var item in newNode.LeftSon.Duplicates)
+                {
+                    item.Parent = newNode;
+                }
+            
+            }
+
+            if (newNode.RightSon != null) 
+            { 
+                newNode.RightSon.Parent = newNode;
+                foreach (var item in newNode.RightSon.Duplicates)
+                {
+                    item.Parent = newNode;
+                }
+            }
+
+            if (root)
+                Root = oldNode;
         }
         #endregion
     }

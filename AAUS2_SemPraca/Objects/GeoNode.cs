@@ -9,7 +9,7 @@ namespace AAUS2_SemPraca.Objects
 
         public object[] GetKeys() => KeyArr.Cast<object>().ToArray();
 
-        public static bool operator == (GeoNode? left, GeoNode? right) 
+        public static bool operator == (GeoNode left, GeoNode right) 
         { 
             return Equals(left!.Value, right!.Value); 
         }
@@ -19,13 +19,10 @@ namespace AAUS2_SemPraca.Objects
             return !Equals(left!.Value, right!.Value); 
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             if (obj is GeoNode other)
             {
-                if (other == null)
-                    return false;
-
                 return Equals(Value, other.Value);
             }
 

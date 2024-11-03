@@ -1,4 +1,5 @@
-﻿using static AAUS2_SemPraca.Utils.Enums;
+﻿using AAUS2_SemPraca.Objects;
+using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca
 {
@@ -14,15 +15,60 @@ namespace AAUS2_SemPraca
         public Coordinate Lat2Coord { get; private set; }
         public double Longitude2 { get; private set; }
         public Coordinate Long2Coord { get; private set; }
+        private bool EditMode { get; set; }
+        private GeoEntity SelectedEntity { get; set; }
+        private readonly SemProject _project;
 
-        public DetailsForm()
+        public DetailsForm(DataGridViewRow selectedRow, GeoEntity selected)
         {
             InitializeComponent();
+            _project = SemProject.Instance;
 
+            NumberInput.Controls[0].Hide();
+            Latitude1Input.Controls[0].Hide();
+            Longitude1Input.Controls[0].Hide();
+            Latitude2Input.Controls[0].Hide();
+            Longitude2Input.Controls[0].Hide();
+            EditButton.Enabled = false;
+            Lat1CoordInput.Enabled = false;
+            Long1CoordInput.Enabled = false;
+            Lat2CoordInput.Enabled = false;
+            Long2CoordInput.Enabled = false;
             Lat1CoordInput.Items.AddRange([Coordinate.North, Coordinate.South]);
             Long1CoordInput.Items.AddRange([Coordinate.East, Coordinate.West]);
             Lat2CoordInput.Items.AddRange([Coordinate.North, Coordinate.South]);
             Long2CoordInput.Items.AddRange([Coordinate.East, Coordinate.West]);
+
+            SelectedEntity = selected;
+
+            Number = (int)selectedRow.Cells["NumberColumn"].Value;
+            Description = (string)selectedRow.Cells["DescriptionColumn"].Value;
+
+            var point1 = selectedRow.Cells["GPS1Column"].Value.ToString().Split('~');
+            var point2 = selectedRow.Cells["GPS2Column"].Value.ToString().Split('~');
+
+            listBox1.DataSource = selected.SubAreas;
+
+            Latitude1 = Double.Parse(point1[0]);
+            Lat1Coord = (Coordinate)Enum.Parse(typeof(Coordinate), point1[1]);
+            Longitude1 = Double.Parse(point1[2]);
+            Long1Coord = (Coordinate)Enum.Parse(typeof(Coordinate), point1[3]);
+
+            Latitude2 = Double.Parse(point2[0]);
+            Lat2Coord = (Coordinate)Enum.Parse(typeof(Coordinate), point2[1]);
+            Longitude2 = Double.Parse(point2[2]);
+            Long2Coord = (Coordinate)Enum.Parse(typeof(Coordinate), point2[3]);
+
+            NumberInput.Value = Number;
+            DescriptionInput.Text = Description;
+            Latitude1Input.Value = (decimal)Latitude1;
+            Lat1CoordInput.SelectedItem = Lat1Coord;
+            Longitude1Input.Value = (decimal)Longitude1;
+            Long1CoordInput.SelectedItem = Long1Coord;
+            Latitude2Input.Value = (decimal)Latitude2;
+            Lat2CoordInput.SelectedItem = Lat2Coord;
+            Longitude2Input.Value = (decimal)Longitude2;
+            Long2CoordInput.SelectedItem = Long2Coord;
         }
 
         private bool ValidateInputs()
@@ -102,7 +148,7 @@ namespace AAUS2_SemPraca
 
         private void EditButton_Click(object sender, EventArgs e)
         {
-            if (ValidateInputs())
+            if (ValidateInputs() && EditMode)
             {
                 Number = (int)NumberInput.Value;
                 Description = DescriptionInput.Text;
@@ -118,6 +164,48 @@ namespace AAUS2_SemPraca
                 DialogResult = DialogResult.OK;
                 Close();
             }
+        }
+
+        private void DeleteButton_Click(object sender, EventArgs e)
+         {
+            if (SelectedEntity is Parcel parcel)
+                _project.DeleteParcel(parcel);
+            else if (SelectedEntity is Property property)
+                _project.DeleteProperty(property);
+        }
+
+        private void EditCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            EditMode = EditCheckBox.Checked;
+
+            if (EditMode)
+            {
+                NumberInput.Controls[0].Show();
+                Latitude1Input.Controls[0].Show();
+                Longitude1Input.Controls[0].Show();
+                Latitude2Input.Controls[0].Show();
+                Longitude2Input.Controls[0].Show();
+            }
+            else
+            {
+                NumberInput.Controls[0].Hide();
+                Latitude1Input.Controls[0].Hide();
+                Longitude1Input.Controls[0].Hide();
+                Latitude2Input.Controls[0].Hide();
+                Longitude2Input.Controls[0].Hide();
+            }
+
+            NumberInput.ReadOnly = !EditMode;
+            DescriptionInput.ReadOnly = !EditMode;
+            Latitude1Input.ReadOnly = !EditMode;
+            Lat1CoordInput.Enabled = EditMode;
+            Longitude1Input.ReadOnly = !EditMode;
+            Long1CoordInput.Enabled = EditMode;
+            Latitude2Input.ReadOnly = !EditMode;
+            Lat2CoordInput.Enabled = EditMode;
+            Longitude2Input.ReadOnly = !EditMode;
+            Long2CoordInput.Enabled = EditMode;
+            EditButton.Enabled = EditMode;
         }
     }
 }
