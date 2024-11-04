@@ -44,8 +44,8 @@ namespace AAUS2_SemPraca.Tester
 
             for (int i = 0; i < numberOfIterations; i++)
             {
-                //var entityToDelete = TestEntities[_random.Next(TestEntities.Count)]; // tu pozri este na listy
-                var entityToDelete = TestEntities[TestEntities.Count - 1];
+                var entityToDelete = TestEntities[_random.Next(TestEntities.Count)];
+                //var entityToDelete = TestEntities[TestEntities.Count - 1];
                 var (succ, message) = TestTree.Delete(entityToDelete);
                 TestEntities.Remove(entityToDelete);
             }

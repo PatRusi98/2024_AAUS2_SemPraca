@@ -14,8 +14,8 @@ namespace AAUS2_SemPraca
             // see https://aka.ms/applicationconfiguration.
 
             // GUI
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            //ApplicationConfiguration.Initialize();
+            //Application.Run(new Form1());
 
             // test entit pre semestralku
             //SemProject project = SemProject.Instance;
@@ -31,7 +31,7 @@ namespace AAUS2_SemPraca
             while (true)
             {
                 StructFinalTester tester = new();
-                tester.CreateTestCase(10000, 20000, 70.00, 0.00, 30.00);
+                tester.CreateTestCase(100000, 20000, 70.00, 0.00, 30.00);
             }
             //StructFinalTester tester = new();
             //tester.TestInsert(20000);

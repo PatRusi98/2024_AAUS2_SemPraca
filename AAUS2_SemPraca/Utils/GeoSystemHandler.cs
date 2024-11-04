@@ -121,6 +121,25 @@ namespace AAUS2_SemPraca.Utils
             DebugCode message = DebugCode.UnknownEntity;
             if (entity is Parcel parcel)
             {
+                var toDeleteSubAreaProp = TreeProperty.Search(new GeoNode(parcel.Key1));
+                foreach (var item in toDeleteSubAreaProp)
+                {
+                    if (item.Value != null)
+                    {
+                        item.Value.SubAreas.Remove(parcel);
+                    }
+                }
+
+                var toDeleteSubAreaAll = TreeObjects.Search(new GeoNode(parcel.Key1));
+                foreach (var item in toDeleteSubAreaAll)
+                {
+                    if (item.Value != null)
+                    {
+                        item.Value.SubAreas.Remove(parcel);
+                    }
+                }
+                
+
                 (success, message) = TreeParcel.Delete(new GeoNode(parcel.Key1) { Value = parcel });
                 (success, message) = TreeParcel.Delete(new GeoNode(parcel.Key2) { Value = parcel });
 
@@ -129,6 +148,24 @@ namespace AAUS2_SemPraca.Utils
             }
             else if (entity is Property property)
             {
+                var toDeleteSubAreaParc = TreeProperty.Search(new GeoNode(property.Key1));
+                foreach (var item in toDeleteSubAreaParc)
+                {
+                    if (item.Value != null)
+                    {
+                        item.Value.SubAreas.Remove(property);
+                    }
+                }
+
+                var toDeleteSubAreaAll = TreeObjects.Search(new GeoNode(property.Key1));
+                foreach (var item in toDeleteSubAreaAll)
+                {
+                    if (item.Value != null)
+                    {
+                        item.Value.SubAreas.Remove(property);
+                    }
+                }
+
                 (success, message) = TreeProperty.Delete(new GeoNode(property.Key1) { Value = property });
                 (success, message) = TreeProperty.Delete(new GeoNode(property.Key2) { Value = property });
 

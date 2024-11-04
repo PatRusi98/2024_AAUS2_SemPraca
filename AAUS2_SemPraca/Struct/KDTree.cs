@@ -1,4 +1,5 @@
 ﻿using AAUS2_SemPraca.Utils;
+using System.Threading.Tasks.Sources;
 using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Struct
@@ -367,11 +368,15 @@ namespace AAUS2_SemPraca.Struct
             KDTreeNode<T> currNode = localRoot;
             var keyPosition = parentDepth % Dimensions;
             object? maxKeyValue = null;
+            var depth = localRoot.Depth;
+            var keyAxis = parentDepth % Dimensions;
+            var axis = depth % Dimensions;
 
             while (currNode != null || stack.Count > 0)
             {
                 while (currNode != null)
                 {
+                    axis = currNode.Depth % Dimensions;
                     if (maxDuplicates.Count == 0)
                     {
                         maxDuplicates.Add(currNode);
@@ -388,8 +393,15 @@ namespace AAUS2_SemPraca.Struct
                         maxDuplicates.Add(currNode);
                     }
 
-                    stack.Push(currNode);
-                    currNode = currNode.LeftSon!;
+                    if (keyAxis == axis)
+                    {
+                        stack.Push(currNode);
+                        currNode = currNode.RightSon!;
+                    }
+                    else
+                    {
+                        currNode = currNode.LeftSon!;
+                    }
                 }
 
                 currNode = stack.Pop();
@@ -406,11 +418,15 @@ namespace AAUS2_SemPraca.Struct
             KDTreeNode<T> currNode = localRoot;
             var keyPosition = parentDepth % Dimensions;
             object? minKeyValue = null;
+            var depth = localRoot.Depth;
+            var keyAxis = parentDepth % Dimensions;
+            var axis = depth % Dimensions;
 
             while (currNode != null || stack.Count > 0)
             {
                 while (currNode != null)
                 {
+                    axis = currNode.Depth % Dimensions;
                     if (minDuplicates.Count == 0)
                     {
                         minDuplicates.Add(currNode);
@@ -427,7 +443,11 @@ namespace AAUS2_SemPraca.Struct
                         minDuplicates.Add(currNode);
                     }
 
-                    stack.Push(currNode);
+                    if (keyAxis == axis)
+                    {
+                        stack.Push(currNode);
+                    }
+
                     currNode = currNode.LeftSon!;
                 }
 
@@ -437,6 +457,67 @@ namespace AAUS2_SemPraca.Struct
 
             return minDuplicates;
         }
+
+        //private List<KDTreeNode<T>> GetMaxInorder(KDTreeNode<T> localRoot, int parentDepth)
+        //{
+        //    var visited = new List<KDTreeNode<T>>();
+        //    object max = 0;
+
+        //    if (localRoot == null)                                                                   // ak neexistuje localRoot, strom je prazdny
+        //        return new();
+
+        //    List<T>? found = new();
+
+        //    KDTreeNode<T>? currNode = localRoot;                                                     // nastavim aktualny workingNode na localRoot, kedze prehladavam od korena
+        //    Stack<KDTreeNode<T>> stack = new();
+        //    int depth = currNode.Depth;
+        //    int keyAxis = parentDepth % Dimensions;
+
+        //    while (currNode != null)                                                            // pokial sa nedostaneme do listu (nema syna)
+        //    {
+        //        int axis = depth % Dimensions;
+
+        //        if (axis == keyAxis)
+        //        {
+        //            if (currNode.RightSon != null)                                               // kontrola ci nam nevidi node s prazdnym value
+        //                if (currNode.RightSon!.Value == null)
+        //                    currNode.RightSon = null;
+
+        //            visited.Add(currNode);
+        //            max = currNode.Value!.GetKeys()[axis];
+        //            currNode = currNode.RightSon;
+        //        }
+        //        else
+        //        {
+        //            if (value.GetKeys()[axis].CompareKeys(currNode.Value.GetKeys()[axis]) <= 0)     // porovnanie klucov v danej dimenzii
+        //            {
+        //                if (currNode.LeftSon != null)                                               // kontrola ci nam nevidi node s prazdnym value
+        //                    if (currNode.LeftSon!.Value == null)
+        //                        currNode.LeftSon = null;
+
+        //                currNode = currNode.LeftSon;                                                // ak je kluc mensi, ideme dolava
+        //            }
+        //            else
+        //            {
+        //                if (currNode.RightSon != null)
+        //                    if (currNode.RightSon!.Value == null)
+        //                        currNode.RightSon = null;
+
+        //                currNode = currNode.RightSon;                                               // ak je kluc vacsi, ideme doprava
+        //            }
+        //        }
+
+        //        depth++;
+        //    }
+
+        //    return visited;
+        //}
+
+        //private List<KDTreeNode<T>> GetMinInorder(KDTreeNode<T> localRoot, int parentDepth)
+        //{
+        //    var minDuplicates = new List<KDTreeNode<T>>();
+        //    return minDuplicates;
+        //}
 
         private List<KDTreeNode<T>> GetReplacements(KDTreeNode<T> localRoot)
         {
