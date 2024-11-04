@@ -31,8 +31,7 @@ namespace AAUS2_SemPraca
             while (true)
             {
                 StructFinalTester tester = new();
-                //tester.TestInsert(20000);
-                tester.CreateTestCase(200, 70.00, 0.00, 30.00);
+                tester.CreateTestCase(10000, 20000, 70.00, 0.00, 30.00);
             }
             //StructFinalTester tester = new();
             //tester.TestInsert(20000);

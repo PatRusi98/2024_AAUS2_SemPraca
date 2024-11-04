@@ -12,7 +12,7 @@ namespace AAUS2_SemPraca.Tester
 
         public StructFinalTester() {
             var seed = _seedGen.Next();
-            _random = new Random(1942319915);  // seed = 1942319915, i = 85
+            _random = new Random(seed);
             Debug.WriteLine("Seed: " + seed);
         }
 
@@ -31,6 +31,23 @@ namespace AAUS2_SemPraca.Tester
 
                 TestTree.Insert(new TestFinalEntity(testValue1, testValue2, GenerateRandomString()));
                 TestEntities.Add(new TestFinalEntity(testValue1, testValue2, GenerateRandomString()));
+            }
+        }
+
+        public void TestDelete(int numberOfIterations = 1)
+        {
+            if (TestEntities.Count < 1)
+                return;
+
+            if (numberOfIterations < 1)
+                return;
+
+            for (int i = 0; i < numberOfIterations; i++)
+            {
+                //var entityToDelete = TestEntities[_random.Next(TestEntities.Count)]; // tu pozri este na listy
+                var entityToDelete = TestEntities[TestEntities.Count - 1];
+                var (succ, message) = TestTree.Delete(entityToDelete);
+                TestEntities.Remove(entityToDelete);
             }
         }
 
@@ -63,23 +80,7 @@ namespace AAUS2_SemPraca.Tester
             }
         }
 
-        public void TestDelete(int numberOfIterations = 1)
-        {
-            if (TestEntities.Count < 1)
-                return;
-
-            if (numberOfIterations < 1)
-                return;
-
-            for (int i = 0; i < numberOfIterations; i++)
-            {
-                var entityToDelete = TestEntities[_random.Next(TestEntities.Count)];
-                var (succ, message) = TestTree.Delete(entityToDelete);
-                TestEntities.Remove(entityToDelete);
-            }
-        }
-
-        public void CreateTestCase(int numberOfIterations, double insertProb, double searchProb, double deleteProb)
+        public void CreateTestCase(int numberOfIterations, int numberOfItemsToStart, double insertProb, double searchProb, double deleteProb)
         {
             ClearTree();
             TestEntities = new();
@@ -89,6 +90,11 @@ namespace AAUS2_SemPraca.Tester
             double search = searchProb / combinedProb;
             double delete = deleteProb / combinedProb;
             string op = "";
+
+            for (int i = 0; i < numberOfItemsToStart; i++)
+            {
+                TestInsert();
+            }
 
             for (int i = 0; i < numberOfIterations; i++)
             {

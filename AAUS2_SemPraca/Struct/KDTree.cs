@@ -247,6 +247,9 @@ namespace AAUS2_SemPraca.Struct
 
                 depth++;
             }
+
+            if (currNode == null)
+                return (false, DebugCode.Unknown);
             
             if (currNode?.LeftSon == null && currNode?.RightSon == null)                          // ak je listom
             {
@@ -269,6 +272,8 @@ namespace AAUS2_SemPraca.Struct
                     parentNode!.LeftSon = null;
                 else
                     parentNode!.RightSon = null;
+
+                currNode.Value = default;
 
                 return (true, DebugCode.Success);
             }
