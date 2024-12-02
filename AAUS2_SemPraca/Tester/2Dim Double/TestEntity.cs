@@ -3,7 +3,7 @@ using AAUS2_SemPraca.Struct;
 
 namespace AAUS2_SemPraca.Tester
 {
-    public class TestEntity(double testValue1, double testValue2) : IMultiKey
+    public class TestEntity(double testValue1, double testValue2) : IStorable
     {
         private readonly double Key1 = testValue1;
         private readonly double Key2 = testValue2;

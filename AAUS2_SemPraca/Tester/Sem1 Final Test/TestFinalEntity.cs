@@ -2,7 +2,7 @@
 
 namespace AAUS2_SemPraca.Tester
 {
-    public class TestFinalEntity(int testValue1, int testValue2, string primKey) : IMultiKey
+    public class TestFinalEntity(int testValue1, int testValue2, string primKey) : IStorable
     {
         private readonly int Key1 = testValue1;
         private readonly int Key2 = testValue2;

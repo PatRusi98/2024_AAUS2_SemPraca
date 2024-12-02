@@ -2,7 +2,7 @@
 
 namespace AAUS2_SemPraca.Tester
 {
-    public class TestEntity4Dim(ABKey key1, int key2, double key3, BCKey key4) : IMultiKey
+    public class TestEntity4Dim(ABKey key1, int key2, double key3, BCKey key4) : IStorable
     {
         private ABKey Key1 { get; set; } = key1;
         private int Key2 { get; set; } = key2;

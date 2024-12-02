@@ -2,7 +2,7 @@
 
 namespace AAUS2_SemPraca.Objects
 {
-    public class GeoNode(double[] key) : IMultiKey
+    public class GeoNode(double[] key) : IStorable
     {
         public GeoEntity? Value { get; set; } = null;
         public double[] KeyArr { get; } = key;
