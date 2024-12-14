@@ -27,23 +27,5 @@ namespace AAUS2_SemPraca.Utils
             [Description("Property")]
             Property = 1
         }
-
-        public enum DebugCode : short
-        {
-            [Description("Stored duplicate key")]
-            StoredDuplicate = -2,
-            [Description("Successful operation")]
-            Success = -1,
-            [Description("Tree is empty")]
-            EmptyTree = 0,
-            [Description("Wrong key dimension")]
-            WrongKeyDimension = 1,
-            [Description("Parent node is null")]
-            NullParent = 2,
-            [Description("Unknown entity type")]
-            UnknownEntity = 3,
-            [Description("Unknown error")]
-            Unknown = 99
-        }
     }
 }

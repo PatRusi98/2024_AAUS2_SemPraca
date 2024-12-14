@@ -2,26 +2,26 @@
 
 namespace AAUS2_SemPraca.Objects
 {
-    public class GeoNode(double[] key) : IStorable
+    public class NodeData<T>(double[] key) : IStorable
     {
-        public GeoEntity? Value { get; set; } = null;
+        public T? Value { get; set; } = default;
         public double[] KeyArr { get; } = key;
 
         public object[] GetKeys() => KeyArr.Cast<object>().ToArray();
 
-        public static bool operator == (GeoNode left, GeoNode right) 
+        public static bool operator == (NodeData<T> left, NodeData<T> right) 
         { 
             return Equals(left!.Value, right!.Value); 
         }
 
-        public static bool operator != (GeoNode? left, GeoNode? right) 
+        public static bool operator != (NodeData<T>? left, NodeData<T>? right) 
         { 
             return !Equals(left!.Value, right!.Value); 
         }
 
         public override bool Equals(object obj)
         {
-            if (obj is GeoNode other)
+            if (obj is NodeData<T> other)
             {
                 return Equals(Value, other.Value);
             }

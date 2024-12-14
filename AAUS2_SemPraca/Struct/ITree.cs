@@ -4,6 +4,7 @@
     {
         bool Insert(T record);
         List<T>? Search(T record);
+        List<T>? SearchAll();
         bool Delete(T record);
     }
 }

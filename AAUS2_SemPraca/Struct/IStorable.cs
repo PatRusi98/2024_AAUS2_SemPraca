@@ -2,6 +2,6 @@
 {
     public interface IStorable
     {
-        object[] GetKeys();     // vrati pole objektov ktore reprezentuju kluc
+        object[] GetKeys();
     }
 }

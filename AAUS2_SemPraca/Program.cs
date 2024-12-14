@@ -16,13 +16,6 @@ namespace AAUS2_SemPraca
             // GUI
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
-
-            // tester
-            //while (true)
-            //{
-            //    StructFinalTester tester = new();
-            //    tester.CreateTestCase(100000, 20000, 70.00, 0.00, 30.00);
-            //}
         }
     }
 }

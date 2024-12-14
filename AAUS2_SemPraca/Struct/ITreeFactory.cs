@@ -1,7 +1,7 @@
 ﻿namespace AAUS2_SemPraca.Struct
 {
-    public interface ITreeFactory<T>
+    public interface ITreeFactory<TBase>
     {
-        ITree<T> CreateTree();
+        ITree<T> CreateTree<T>() where T : TBase;
     }
 }

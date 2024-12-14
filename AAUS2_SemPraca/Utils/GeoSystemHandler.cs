@@ -1,20 +1,27 @@
 ﻿using AAUS2_SemPraca.Objects;
 using AAUS2_SemPraca.Struct;
-using AAUS2_SemPraca.Tester;
 using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Utils
 {
     public class GeoSystemHandler
     {
+        private KDTreeFactory _kdTreeFactory;
+        private TreeManager<NodeData<Parcel>> _parcelTreeManager;
+        private TreeManager<NodeData<Property>> _propertyTreeManager;
+        private TreeManager<NodeData<GeoEntity>> _objectTreeManager;
+
         private static GeoSystemHandler? _instance = null;
-        private KDTree<GeoNode> TreeParcel { get; } = new();
-        private KDTree<GeoNode> TreeProperty { get; } = new();
-        private KDTree<GeoNode> TreeObjects { get; } = new();
         private Random _random = new();
         private Generator _generator = Generator.Instance;
 
-        private GeoSystemHandler() { }
+        private GeoSystemHandler() 
+        {
+            _kdTreeFactory = KDTreeFactory.Instance();
+            _parcelTreeManager = new(_kdTreeFactory);
+            _propertyTreeManager = new(_kdTreeFactory);
+            _objectTreeManager = new(_kdTreeFactory);
+        }
 
         public static GeoSystemHandler Instance
         {
@@ -31,14 +38,13 @@ namespace AAUS2_SemPraca.Utils
         public bool Insert(GeoEntity entity)
         {
             var success = false;
-            DebugCode message = DebugCode.UnknownEntity;
             if (entity is Parcel parcel)
             {
-                (success, message) = TreeParcel.Insert(new GeoNode(parcel.Key1) { Value = parcel });
-                (success, message) = TreeParcel.Insert(new GeoNode(parcel.Key2) { Value = parcel });
-
-                (success, message) = TreeObjects.Insert(new GeoNode(parcel.Key1) { Value = parcel });
-                (success, message) = TreeObjects.Insert(new GeoNode(parcel.Key2) { Value = parcel });
+                success = _parcelTreeManager.Add(new NodeData<Parcel>(parcel.Key1) { Value = parcel });
+                success = _parcelTreeManager.Add(new NodeData<Parcel>(parcel.Key2) { Value = parcel });
+                
+                success = _objectTreeManager.Add(new NodeData<GeoEntity>(parcel.Key1) { Value = parcel });
+                success = _objectTreeManager.Add(new NodeData<GeoEntity>(parcel.Key2) { Value = parcel });
 
                 var groupedItems = SearchOverlapItems(parcel).GroupBy(x => x.ID);
                 List<GeoEntity> overlapItems = new();
@@ -58,11 +64,11 @@ namespace AAUS2_SemPraca.Utils
             }
             else if (entity is Property property)
             {
-                (success, message) = TreeProperty.Insert(new GeoNode(property.Key1) { Value = property });
-                (success, message) = TreeProperty.Insert(new GeoNode(property.Key2) { Value = property });
+                success = _propertyTreeManager.Add(new NodeData<Property>(property.Key1) { Value = property });
+                success = _propertyTreeManager.Add(new NodeData<Property>(property.Key2) { Value = property });
 
-                (success, message) = TreeObjects.Insert(new GeoNode(property.Key1) { Value = property });
-                (success, message) = TreeObjects.Insert(new GeoNode(property.Key2) { Value = property });
+                success = _objectTreeManager.Add(new NodeData<GeoEntity>(property.Key1) { Value = property });
+                success = _objectTreeManager.Add(new NodeData<GeoEntity>(property.Key2) { Value = property });
 
                 var groupedItems = SearchOverlapItems(property).GroupBy(x => x.ID);
                 List<GeoEntity> overlapItems = new();
@@ -118,10 +124,9 @@ namespace AAUS2_SemPraca.Utils
         public bool Delete(GeoEntity entity)
         {
             var success = false;
-            DebugCode message = DebugCode.UnknownEntity;
             if (entity is Parcel parcel)
             {
-                var toDeleteSubAreaProp = TreeProperty.Search(new GeoNode(parcel.Key1));
+                var toDeleteSubAreaProp = _propertyTreeManager.Find(new NodeData<Property>(parcel.Key2));
                 foreach (var item in toDeleteSubAreaProp)
                 {
                     if (item.Value != null)
@@ -130,7 +135,7 @@ namespace AAUS2_SemPraca.Utils
                     }
                 }
 
-                var toDeleteSubAreaAll = TreeObjects.Search(new GeoNode(parcel.Key1));
+                var toDeleteSubAreaAll = _objectTreeManager.Find(new NodeData<GeoEntity>(parcel.Key2));
                 foreach (var item in toDeleteSubAreaAll)
                 {
                     if (item.Value != null)
@@ -139,16 +144,15 @@ namespace AAUS2_SemPraca.Utils
                     }
                 }
                 
+                success = _parcelTreeManager.Remove(new NodeData<Parcel>(parcel.Key1) { Value = parcel });
+                success = _parcelTreeManager.Remove(new NodeData<Parcel>(parcel.Key2) { Value = parcel });
 
-                (success, message) = TreeParcel.Delete(new GeoNode(parcel.Key1) { Value = parcel });
-                (success, message) = TreeParcel.Delete(new GeoNode(parcel.Key2) { Value = parcel });
-
-                (success, message) = TreeObjects.Delete(new GeoNode(parcel.Key1) { Value = parcel });
-                (success, message) = TreeObjects.Delete(new GeoNode(parcel.Key2) { Value = parcel });
+                success = _objectTreeManager.Remove(new NodeData<GeoEntity>(parcel.Key1) { Value = parcel });
+                success = _objectTreeManager.Remove(new NodeData<GeoEntity>(parcel.Key2) { Value = parcel });
             }
             else if (entity is Property property)
             {
-                var toDeleteSubAreaParc = TreeProperty.Search(new GeoNode(property.Key1));
+                var toDeleteSubAreaParc = _propertyTreeManager.Find(new NodeData<Property>(property.Key1));
                 foreach (var item in toDeleteSubAreaParc)
                 {
                     if (item.Value != null)
@@ -157,7 +161,7 @@ namespace AAUS2_SemPraca.Utils
                     }
                 }
 
-                var toDeleteSubAreaAll = TreeObjects.Search(new GeoNode(property.Key1));
+                var toDeleteSubAreaAll = _objectTreeManager.Find(new NodeData<GeoEntity>(property.Key1));
                 foreach (var item in toDeleteSubAreaAll)
                 {
                     if (item.Value != null)
@@ -166,11 +170,11 @@ namespace AAUS2_SemPraca.Utils
                     }
                 }
 
-                (success, message) = TreeProperty.Delete(new GeoNode(property.Key1) { Value = property });
-                (success, message) = TreeProperty.Delete(new GeoNode(property.Key2) { Value = property });
+                success = _propertyTreeManager.Remove(new NodeData<Property>(property.Key1) { Value = property });
+                success = _propertyTreeManager.Remove(new NodeData<Property>(property.Key2) { Value = property });
 
-                (success, message) = TreeObjects.Delete(new GeoNode(property.Key1) { Value = property });
-                (success, message) = TreeObjects.Delete(new GeoNode(property.Key2) { Value = property });
+                success = _objectTreeManager.Remove(new NodeData<GeoEntity>(property.Key1) { Value = property });
+                success = _objectTreeManager.Remove(new NodeData<GeoEntity>(property.Key2) { Value = property });
             }
 
             return success;
@@ -178,20 +182,40 @@ namespace AAUS2_SemPraca.Utils
 
         public List<GeoEntity> Search(GPSLocation gps, GeoEntityType type = GeoEntityType.Unknown)
         {
-            var returnedNodes = new List<GeoNode>();
+            var returnedNodes = new List<NodeData<GeoEntity>>();
             var result = new List<GeoEntity>();
 
             if (type == GeoEntityType.Parcel)
-                returnedNodes.AddRange(TreeParcel.Search(new GeoNode(gps.GPSToDouble()))!);
+            {
+                var searchResult = _parcelTreeManager.Find(new NodeData<Parcel>(gps.GPSToDouble()));
+                if (searchResult != null)
+                {
+                    returnedNodes.AddRange(searchResult.Select(node => new NodeData<GeoEntity>(node.KeyArr) { Value = node.Value as GeoEntity }));
+                }
+            }
             else if (type == GeoEntityType.Property)
-                returnedNodes.AddRange(TreeProperty.Search(new GeoNode(gps.GPSToDouble()))!);
+            {
+                var searchResult = _propertyTreeManager.Find(new NodeData<Property>(gps.GPSToDouble()));
+                if (searchResult != null)
+                {
+                    returnedNodes.AddRange(searchResult.Select(node => new NodeData<GeoEntity>(node.KeyArr) { Value = node.Value as GeoEntity }));
+                }
+            }
             else
-                returnedNodes.AddRange(TreeObjects.Search(new GeoNode(gps.GPSToDouble()))!);
+            {
+                var searchResult = _objectTreeManager.Find(new NodeData<GeoEntity>(gps.GPSToDouble()));
+                if (searchResult != null)
+                {
+                    returnedNodes.AddRange(searchResult);
+                }
+            }
 
             foreach (var node in returnedNodes)
             {
                 if (node.Value != null)
+                {
                     result.Add(node.Value);
+                }
             }
 
             return result;
@@ -199,15 +223,15 @@ namespace AAUS2_SemPraca.Utils
 
         public List<GeoEntity> SearchAll(GeoEntityType type = GeoEntityType.Unknown)
         {
-            var returnedNodes = new List<GeoNode>();
+            var returnedNodes = new List<NodeData<GeoEntity>>();
             var result = new List<GeoEntity>();
 
             if (type == GeoEntityType.Parcel)
-                returnedNodes.AddRange(TreeParcel.GetAllItems()!);
+                returnedNodes.AddRange(_parcelTreeManager.FindAll()!.Cast<NodeData<GeoEntity>>());
             else if (type == GeoEntityType.Property)
-                returnedNodes.AddRange(TreeProperty.GetAllItems()!);
+                returnedNodes.AddRange(_propertyTreeManager.FindAll()!.Cast<NodeData<GeoEntity>>());
             else
-                returnedNodes.AddRange(TreeObjects.GetAllItems()!);
+                returnedNodes.AddRange(_objectTreeManager.FindAll()!);
 
             foreach (var node in returnedNodes)
             {

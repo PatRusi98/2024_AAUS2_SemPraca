@@ -54,10 +54,9 @@ namespace AAUS2_SemPraca.Utils
 
         public static string GetDescription(this Enum value)
         {
-            FieldInfo field = value.GetType().GetField(value.ToString());
-
-            DescriptionAttribute attribute = field.GetCustomAttribute<DescriptionAttribute>();
-
+            FieldInfo field = value.GetType().GetField(value.ToString())!;
+            DescriptionAttribute attribute = field.GetCustomAttribute<DescriptionAttribute>()!;
+            
             return attribute != null ? attribute.Description : value.ToString();
         }
 

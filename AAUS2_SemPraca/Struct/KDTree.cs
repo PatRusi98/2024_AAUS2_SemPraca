@@ -1,5 +1,4 @@
 ﻿using AAUS2_SemPraca.Utils;
-using static AAUS2_SemPraca.Utils.Enums;
 
 namespace AAUS2_SemPraca.Struct
 {
@@ -136,6 +135,11 @@ namespace AAUS2_SemPraca.Struct
             }
 
             return found;
+        }
+
+        public List<T>? SearchAll()
+        {
+            return GetAllItems();
         }
 
         public List<T>? GetAllItems(KDTreeNode<T>? root = null, bool includeDuplicates = true)
